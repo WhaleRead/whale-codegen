@@ -6,7 +6,7 @@
 
     <groupId>com.whaleread.codegen</groupId>
     <artifactId>code-gen</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <modules>
         <module>generator-core</module>
         <module>whale-generator-maven-plugin</module>
