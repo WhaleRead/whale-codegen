@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//whaleread.com//DTD Whale Generator Configuration 1.0//EN"
+        "http://whaleread.com/dtd/whale-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <context id="novel">
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <property name="autoDelimitKeywords" value="true"/>
+        <commentGenerator>
+            <property name="suppressDate" value="true"/>
+            <property name="addRemarkComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://9ytest.com:33062/novel_admin?useUnicode=true" userId="app" password="123456"/>
+        <!--<connectionFactory type="DDL">-->
+            <!--<property name="parser" value="com.whaleread.codegen.api.ddl.parser.MySqlDdlParser" />-->
+            <!--<property name="path" value="src/main/codegen/ddl/novel_admin.sql" />-->
+        <!--</connectionFactory>-->
+
+        <javaTypeResolver >
+            <property name="forceBigDecimals" value="false" />
+        </javaTypeResolver>
+
+        <builtInGenerator targetPackage="com.whaleread.codegen.sample" targetProject="MAVEN">
+            <property name="enableSubPackages" value="true" />
+            <property name="trimStrings" value="true" />
+            <property name="dtoEnabled" value="true"/>
+            <property name="daoEnabled" value="true"/>
+        </builtInGenerator>
+
+        <table tableName="user" catalog="novel_admin" alias="u">
+        </table>
+
+        <table tableName="role" catalog="novel_admin">
+        </table>
+
+        <table tableName="perm" catalog="novel_admin">
+        </table>
+
+    </context>
+</generatorConfiguration>

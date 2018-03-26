@@ -1,0 +1,12 @@
+/*.iml
+/generator-core/generator-core.iml
+/generator-core/target
+/generator-ddl-parser-mysql/generator-ddl-parser-mysql.iml
+/generator-ddl-parser-mysql/target
+/generator-runtime/target
+/generator-runtime/generator-runtime.iml
+/generator-sample/generator-sample.iml
+/generator-sample/target
+/whale-generator-maven-plugin/whale-generator-maven-plugin.iml
+/whale-generator-maven-plugin/target
+/.idea
