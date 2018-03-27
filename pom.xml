@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.whaleread.codegen</groupId>
-    <artifactId>code-gen</artifactId>
+    <artifactId>parent</artifactId>
     <version>0.1</version>
     <modules>
         <module>generator-core</module>
