@@ -37,59 +37,40 @@
 
     <build>
         <plugins>
-            <!--<plugin>-->
-            <!--<groupId>org.mybatis.generator</groupId>-->
-            <!--<artifactId>mybatis-generator-maven-plugin</artifactId>-->
-            <!--<version>1.3.6</version>-->
-            <!--<executions>-->
-            <!--<execution>-->
-            <!--<id>Whale Code Generator</id>-->
-            <!--<goals>-->
-            <!--<goal>generate</goal>-->
-            <!--</goals>-->
-            <!--</execution>-->
-            <!--</executions>-->
-            <!--<configuration>-->
-            <!--<configurationFile>${basedir}/src/main/codegen/whale-generator.xml</configurationFile>-->
-            <!--</configuration>-->
-            <!--<dependencies>-->
-            <!--<dependency>-->
-            <!--<groupId>com.whaleread.codegen</groupId>-->
-            <!--<artifactId>whale-codegen-core</artifactId>-->
-            <!--<version>${project.version}</version>-->
-            <!--</dependency>-->
-            <!--<dependency>-->
-            <!--<groupId>com.whaleread.codegen</groupId>-->
-            <!--<artifactId>whale-ddl-parser-mysql</artifactId>-->
-            <!--<version>${project.version}</version>-->
-            <!--</dependency>-->
-            <!--</dependencies>-->
-            <!--</plugin>-->
-            <plugin>
-                <groupId>com.whaleread.codegen</groupId>
-                <artifactId>whale-generator-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <id>Whale Code Generator</id>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <merge>true</merge>
-                    <includeAllDependencies>true</includeAllDependencies>
-                    <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-jdbc</artifactId>
-                        <version>${spring.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>codegen</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.whaleread.codegen</groupId>
+                        <artifactId>whale-generator-maven-plugin</artifactId>
+                        <version>${project.version}</version>
+                        <executions>
+                            <execution>
+                                <id>Whale Code Generator</id>
+                                <goals>
+                                    <goal>generate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <merge>true</merge>
+                            <includeAllDependencies>true</includeAllDependencies>
+                            <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.springframework</groupId>
+                                <artifactId>spring-jdbc</artifactId>
+                                <version>${spring.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
