@@ -203,6 +203,7 @@ public class GeneratedJavaFile extends GeneratedFile {
         }
         mergeAnnotations(dest, target);
         mergeFields(dest, target);
+        mergeConstructors(dest, target);
         mergeMethods(dest, target);
         mergeInnerClasses(dest, target);
     }
@@ -240,6 +241,17 @@ public class GeneratedJavaFile extends GeneratedFile {
     private void mergeFields(ClassOrInterfaceDeclaration dest, ClassOrInterfaceDeclaration target) {
         for (FieldDeclaration t : target.findAll(FieldDeclaration.class, m -> !m.getAnnotationByClass(Generated.class).isPresent())) {
             Optional<FieldDeclaration> d = dest.findFirst(FieldDeclaration.class, m -> m.getVariables().get(0).getName().equals(t.getVariables().get(0).getName()));
+            if (d.isPresent()) {
+                dest.replace(d.get(), t.clone());
+            } else {
+                dest.addMember(t.clone());
+            }
+        }
+    }
+
+    private void mergeConstructors(ClassOrInterfaceDeclaration dest, ClassOrInterfaceDeclaration target) {
+        for (ConstructorDeclaration t : target.findAll(ConstructorDeclaration.class, m -> !m.getAnnotationByClass(Generated.class).isPresent())) {
+            Optional<ConstructorDeclaration> d = dest.findFirst(ConstructorDeclaration.class, m -> m.getName().equals(t.getName()) && parametersEquals(m.getParameters(), t.getParameters()));
             if (d.isPresent()) {
                 dest.replace(d.get(), t.clone());
             } else {
