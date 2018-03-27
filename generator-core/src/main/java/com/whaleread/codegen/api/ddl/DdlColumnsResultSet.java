@@ -28,7 +28,7 @@ public class DdlColumnsResultSet extends DdlResultSet {
     public int getInt(String columnLabel) {
         switch (columnLabel) {
             case "NULLABLE":
-                return current.getNullable();
+                return current.getNullable() == null ? 0 : current.getNullable();
             case "COLUMN_SIZE":
                 return current.getSize();
             case "DECIMAL_DIGITS":
