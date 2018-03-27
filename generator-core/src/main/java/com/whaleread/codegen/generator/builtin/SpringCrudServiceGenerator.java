@@ -35,7 +35,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         FullyQualifiedJavaType repositoryClass = new FullyQualifiedJavaType(introspectedTable.getDaoType());
         topLevelClass.addImportedType(repositoryClass);
 
-        Field repositoryField = new Field(introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix(), repositoryClass);
+        Field repositoryField = new Field(introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix(), repositoryClass);
         repositoryField.setVisibility(JavaVisibility.PRIVATE);
         repositoryField.addAnnotation("@Autowired");
         commentGenerator.addGeneratedAnnotation(repositoryField, topLevelClass.getImportedTypes());
@@ -74,9 +74,17 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         } else {
             recordType = new FullyQualifiedJavaType(introspectedTable.getModelType());
         }
-        method.setReturnType(recordType);
+        if(context.getBuiltInGeneratorConfiguration().isNonNullEnabled()) {
+            topLevelClass.addImportedType("java.util.Optional");
+            FullyQualifiedJavaType optionalType = new FullyQualifiedJavaType("java.util.Optional");
+            optionalType.addTypeArgument(recordType);
+            method.setReturnType(optionalType);
+        } else {
+            method.setReturnType(recordType);
+        }
+
         topLevelClass.addImportedType(recordType);
-        String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".selectByPrimaryKey(" + repositoryParams.toString() + ");";
+        String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".selectByPrimaryKey(" + repositoryParams.toString() + ");";
         method.addBodyLine(sb);
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         topLevelClass.addMethod(method);
@@ -89,7 +97,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         method.addParameter(new Parameter(criteriaType, "criteria"));
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
-        String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".countByCriteria(criteria);";
+        String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".countByCriteria(criteria);";
         method.addBodyLine(sb);
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         topLevelClass.addMethod(method);
@@ -114,7 +122,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         topLevelClass.addImportedType(List.class.getName());
         method.setReturnType(returnType);
         topLevelClass.addImportedType(returnType);
-        String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".selectByCriteria(criteria, offset, limit);";
+        String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".selectByCriteria(criteria, offset, limit);";
         method.addBodyLine(sb);
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         topLevelClass.addMethod(method);
@@ -126,7 +134,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         topLevelClass.addImportedType(modelType);
         method.addParameter(new Parameter(modelType, "record"));
         method.setVisibility(JavaVisibility.PUBLIC);
-        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".insertSelective(record);";
+        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".insertSelective(record);";
         method.addBodyLine(sb);
         if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("transactionManager"))) {
             method.addAnnotation("@Transactional(transactionManager = \"" + introspectedTable.getTableConfiguration().getProperty("transactionManager") + "\")");
@@ -143,7 +151,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         topLevelClass.addImportedType(modelType);
         method.addParameter(new Parameter(modelType, "record"));
         method.setVisibility(JavaVisibility.PUBLIC);
-        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".updateByPrimaryKeySelective(record);";
+        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".updateByPrimaryKeySelective(record);";
         method.addBodyLine(sb);
         if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("transactionManager"))) {
             method.addAnnotation("@Transactional(transactionManager = \"" + introspectedTable.getTableConfiguration().getProperty("transactionManager") + "\")");
@@ -169,7 +177,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
             }
             repositoryParams.append(column.getJavaProperty());
         }
-        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByPrimaryKey(" + repositoryParams.toString() + ");";
+        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByPrimaryKey(" + repositoryParams.toString() + ");";
         method.addBodyLine(sb);
         if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("transactionManager"))) {
             method.addAnnotation("@Transactional(transactionManager = \"" + introspectedTable.getTableConfiguration().getProperty("transactionManager") + "\")");

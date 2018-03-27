@@ -152,10 +152,20 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         whereFragment.setLength(whereFragment.length() - 4);
         valueFragment.setLength(valueFragment.length() - 2);
         String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        boolean nonNullEnabled = context.getBuiltInGeneratorConfiguration().isNonNullEnabled();
+        FullyQualifiedJavaType returnType;
         if (introspectedTable.getTableConfiguration().isDtoEnabled()) {
-            method.setReturnType(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
+            returnType = new FullyQualifiedJavaType(introspectedTable.getDtoType());
         } else {
-            method.setReturnType(new FullyQualifiedJavaType(introspectedTable.getModelType()));
+            returnType = new FullyQualifiedJavaType(introspectedTable.getModelType());
+        }
+        if(nonNullEnabled) {
+            topLevelClass.addImportedType("java.util.Optional");
+            FullyQualifiedJavaType optionalType = new FullyQualifiedJavaType("java.util.Optional");
+            optionalType.addTypeArgument(returnType);
+            method.setReturnType(optionalType);
+        } else {
+            method.setReturnType(returnType);
         }
         String sb = "return getJdbcTemplate().query(\"SELECT \" + " +
                 domainObjectName +
@@ -165,7 +175,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
                 whereFragment +
                 "\", new Object[]{" +
                 valueFragment +
-                "}, rs -> rs.next() ? rowMapper.mapRow(rs, 0) : null);";
+                "}, rs -> rs.next() ? " + (nonNullEnabled ? "Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());" : "rowMapper.mapRow(rs, 0) : null);");
         method.addBodyLine(sb);
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         topLevelClass.addMethod(method);

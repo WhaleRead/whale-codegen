@@ -34,6 +34,11 @@ public class BuiltInGeneratorConfiguration extends PropertyHolder {
     private boolean serviceEnabled;
     private boolean controllerEnabled;
 
+    /**
+     * Use Optional wrap return value where may be null
+     */
+    private boolean nonNullEnabled;
+
     public void validate(List<String> errors, String contextId) {
         if (!stringHasValue(targetProject)) {
             errors.add(getString("ValidationError.2", contextId)); //$NON-NLS-1$

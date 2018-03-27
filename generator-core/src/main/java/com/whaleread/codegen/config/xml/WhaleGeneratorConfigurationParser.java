@@ -570,6 +570,8 @@ public class WhaleGeneratorConfigurationParser {
         String serviceEnabled = configuration.getProperty("serviceEnabled");
         String controllerEnabled = configuration.getProperty("controllerEnabled");
 
+        String nonNullEnabled = configuration.getProperty("nonNullEnabled");
+
         configuration.setTargetPackage(targetPackage);
         configuration.setTargetProject(targetProject);
 
@@ -601,6 +603,8 @@ public class WhaleGeneratorConfigurationParser {
         if (stringHasValue(controllerEnabled)) {
             configuration.setControllerEnabled(Boolean.parseBoolean(controllerEnabled));
         }
+
+        configuration.setNonNullEnabled(!isFalse(nonNullEnabled));
     }
 
     protected void parseJdbcConnection(Context context, Node node) {
