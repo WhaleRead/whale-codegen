@@ -8,6 +8,7 @@ import com.whaleread.codegen.generator.AbstractGenerator;
 import com.whaleread.codegen.generator.builtin.DtoGenerator;
 import com.whaleread.codegen.generator.builtin.JdbcTemplateJavaClientGenerator;
 import com.whaleread.codegen.generator.builtin.ModelGenerator;
+import com.whaleread.codegen.generator.builtin.SpringCrudServiceGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,11 @@ public class IntrospectedTableWhaleImpl extends IntrospectedTable {
             JdbcTemplateJavaClientGenerator jdbcTemplateJavaClientGenerator = new JdbcTemplateJavaClientGenerator();
             initializeAbstractGenerator(jdbcTemplateJavaClientGenerator, warnings, progressCallback);
             generators.add(jdbcTemplateJavaClientGenerator);
+        }
+        if (builtInGeneratorConfiguration.isServiceEnabled()) {
+            SpringCrudServiceGenerator serviceGenerator = new SpringCrudServiceGenerator();
+            initializeAbstractGenerator(serviceGenerator, warnings, progressCallback);
+            generators.add(serviceGenerator);
         }
     }
 

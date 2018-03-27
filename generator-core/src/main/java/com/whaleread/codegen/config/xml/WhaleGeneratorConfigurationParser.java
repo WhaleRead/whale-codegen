@@ -31,6 +31,7 @@ package com.whaleread.codegen.config.xml;
 import com.whaleread.codegen.config.*;
 import com.whaleread.codegen.exception.XMLParserException;
 import com.whaleread.codegen.internal.ObjectFactory;
+import com.whaleread.codegen.internal.util.StringUtility;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -41,6 +42,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import static com.whaleread.codegen.internal.util.StringUtility.isFalse;
 import static com.whaleread.codegen.internal.util.StringUtility.isTrue;
 import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
@@ -328,6 +330,8 @@ public class WhaleGeneratorConfigurationParser {
                 parseColumnRenamingRule(tc, childNode);
             }
         }
+        tc.setDtoEnabled(context.getBuiltInGeneratorConfiguration().isDtoEnabled() && !isFalse(tc.getProperty("dtoEnabled")));
+        tc.setServiceEnabled(context.getBuiltInGeneratorConfiguration().isServiceEnabled() && !isFalse(tc.getProperty("serviceEnabled")));
     }
 
     private void parseColumnOverride(TableConfiguration tc, Node node) {

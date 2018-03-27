@@ -126,9 +126,9 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         Parameter parameter = new Parameter(injectedType, "dataSource");
         method.addParameter(parameter);
-        if (StringUtility.isNotEmpty(introspectedTable.getTableConfiguration().getDataSourceName())) {
+        if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("dataSource"))) {
             topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Qualifier"));
-            parameter.addAnnotation("@Qualifier(\"" + introspectedTable.getTableConfiguration().getDataSourceName() + "DataSource\")");
+            parameter.addAnnotation("@Qualifier(\"" + introspectedTable.getTableConfiguration().getProperty("dataSource") + "\")");
         }
         method.addBodyLine("super.setDataSource(dataSource);");
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
@@ -274,7 +274,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             method.addBodyLine("params.put(\"" + column.getJavaProperty() + "\", record." + getterMethodName + "());");
 //            method.addBodyLine("}");
         }
-        if(columnsFragment.length() == 0 ) {
+        if (columnsFragment.length() == 0) {
             // there is no columns for insert
             return;
         }

@@ -44,6 +44,10 @@ public class TableConfiguration extends PropertyHolder {
 
     @Getter
     @Setter
+    private boolean serviceEnabled = true;
+
+    @Getter
+    @Setter
     private boolean insertStatementEnabled = true;
 
     @Getter
@@ -137,13 +141,6 @@ public class TableConfiguration extends PropertyHolder {
     @Getter
     @Setter
     private String sqlProviderName;
-
-    /**
-     * not empty to qualify dataSource name
-     */
-    @Getter
-    @Setter
-    private String dataSourceName;
 
     private List<IgnoredColumnPattern> ignoredColumnPatterns = new ArrayList<>();
 

@@ -46,6 +46,8 @@ public class DefaultCommentGenerator implements CommentGenerator {
 
     private boolean suppressAllComments;
 
+    private String name;
+
     /**
      * If suppressAllComments is true, this option is ignored.
      */
@@ -116,6 +118,8 @@ public class DefaultCommentGenerator implements CommentGenerator {
 
         addRemarkComments = isTrue(properties
                 .getProperty(PropertyRegistry.COMMENT_GENERATOR_ADD_REMARK_COMMENTS));
+
+        name = properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_NAME, WhaleGenerator.class.getName());
 
         String dateFormatString = properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_DATE_FORMAT);
         if (StringUtility.stringHasValue(dateFormatString)) {
@@ -480,7 +484,7 @@ public class DefaultCommentGenerator implements CommentGenerator {
             buffer.append("value=\""); //$NON-NLS-1$
         }
 
-        buffer.append(WhaleGenerator.class.getName());
+        buffer.append(name);
         buffer.append('\"');
 
         if (!suppressDate && !suppressAllComments) {
