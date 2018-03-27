@@ -66,9 +66,10 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         if (tableConfig.isSelectByPrimaryKeyStatementEnabled()) {
             addSelectByPrimaryKeyMethod(topLevelClass);
         }
-        if (tableConfig.isUpdateByPrimaryKeyStatementEnabled()) {
-            addUpdateByPrimaryKeySelectiveMethod(topLevelClass);
+        if (tableConfig.isSelectByCriteriaStatementEnabled()) {
+            addSelectByCriteriaMethod(topLevelClass);
         }
+
         if (tableConfig.isInsertStatementEnabled()) {
             addInsertMethod(topLevelClass);
         }
@@ -76,14 +77,14 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             addInsertSelectiveMethod(topLevelClass);
         }
 
-        if (tableConfig.isSelectByCriteriaStatementEnabled()) {
-            addSelectByCriteriaMethod(topLevelClass);
+        if (tableConfig.isUpdateByPrimaryKeyStatementEnabled()) {
+            addUpdateByPrimaryKeySelectiveMethod(topLevelClass);
         }
+
         if (tableConfig.isDeleteByPrimaryKeyStatementEnabled()) {
             addDeleteByPrimaryKeyMethod(topLevelClass);
         }
         if (tableConfig.isDeleteByCriteriaStatementEnabled()) {
-
             addDeleteByCriteriaMethod(topLevelClass);
         }
 
