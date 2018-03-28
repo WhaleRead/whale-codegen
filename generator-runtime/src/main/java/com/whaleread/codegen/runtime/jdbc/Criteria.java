@@ -7,17 +7,18 @@ import java.util.*;
  * Usage:
  * <ul>
  * <li>
- * <p>f.id > 1 and f.name like "%Jack%"</p>
+ * <p>f.id &gt; 1 and f.name like "%Jack%"</p>
  * <p>String keyword = "Jack";new Criteria().gt("f.id", 1).like("f.name", '%' + "keyword + '%')</p>
  * </li>
  * <li>
- * <p>f.id > 1 and ( f.age > 20 or f.gender = 'female' ) and f.birthday between beginDate and endDate</p>
+ * <p>f.id &gt; 1 and ( f.age &gt; 20 or f.gender = 'female' ) and f.birthday between beginDate and endDate</p>
  * <p>Criteria criteria = new Criteria().gt("f.id", 1);criteria.sub(true).gt("f.age", 20).eq("f.gender", "female");criteria.between("f.birthday", beginDate, endDate);</p>
  * </li>
  * </ul>
  * Created by Dolphin on 2017/3/23
  */
 
+@SuppressWarnings({"WeakerAccess", "unused"})
 public class Criteria {
     private int paramIndex;
     private int subCriteriaIndex;
@@ -109,6 +110,8 @@ public class Criteria {
 
     /**
      * Create a sub Criteria, use <code>AND</code> logical as default.
+     *
+     * @return this criteria
      */
     public Criteria sub() {
         return sub(false);
@@ -118,6 +121,7 @@ public class Criteria {
      * Create a sub Criteria
      *
      * @param or Whether to use <code>OR</code> as the logical of this Criteria
+     * @return this criteria
      */
     public Criteria sub(boolean or) {
         Criteria subCriteria = new Criteria(or, subCriteriaIndex++);
@@ -129,6 +133,7 @@ public class Criteria {
      * Set order by clause
      *
      * @param orderByClause The order by clause (without <code>ORDER BY</code> prefix)
+     * @return this criteria
      */
     public Criteria orderBy(String orderByClause) {
         if (orderByClause == null || orderByClause.indexOf(';') != -1 || orderByClause.indexOf('\'') != -1 || orderByClause.indexOf('"') != -1) {
@@ -143,13 +148,14 @@ public class Criteria {
      *
      * @param orderByClause The order by clause (without <code>ORDER BY</code> prefix)
      * @param params        params used by orderByClause
+     * @return this criteria
      */
     public Criteria orderBy(String orderByClause, Map<String, Object> params) {
         if (orderByClause == null || orderByClause.indexOf(';') != -1 || orderByClause.indexOf('\'') != -1 || orderByClause.indexOf('"') != -1) {
             return this;
         }
         this.orderByClause = orderByClause;
-        if(this.params == null) {
+        if (this.params == null) {
             this.params = new HashMap<>();
         }
         this.params.putAll(params);
@@ -164,8 +170,9 @@ public class Criteria {
     }
 
     /**
-     * @param column the column of the condition, left hand
+     * @param column the column name of the condition, left hand
      * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#eq
      */
     public Criteria eq(String column, Object value) {
@@ -174,9 +181,10 @@ public class Criteria {
     }
 
     /**
-     * @param column   the column of the condition, left hand
+     * @param column   the column name of the condition, left hand
      * @param value    the value of the condition, right hand
      * @param function the function used to wrap the value
+     * @return this criteria
      * @see Operation#eq
      */
     public Criteria eq(String column, Object value, Function function) {
@@ -185,8 +193,9 @@ public class Criteria {
     }
 
     /**
-     * @param column the column of the condition, left hand
+     * @param column the column name of the condition, left hand
      * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#ne
      */
     public Criteria ne(String column, Object value) {
@@ -195,9 +204,10 @@ public class Criteria {
     }
 
     /**
-     * @param column   the column of the condition, left hand
+     * @param column   the column name of the condition, left hand
      * @param value    the value of the condition, right hand
      * @param function the function used to wrap the value
+     * @return this criteria
      * @see Operation#eq
      */
     public Criteria ne(String column, Object value, Function function) {
@@ -206,8 +216,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition, left hand
+     * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#lt
      */
     public Criteria lt(String column, Object value) {
@@ -216,9 +227,10 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
-     * @param function
+     * @param column   the column name of the condition, left hand
+     * @param value    the value of the condition, right hand
+     * @param function value's function
+     * @return this criteria
      * @see Operation#lt
      */
     public Criteria lt(String column, Object value, Function function) {
@@ -227,8 +239,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition, left hand
+     * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#lte
      */
     public Criteria lte(String column, Object value) {
@@ -237,9 +250,10 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
-     * @param function
+     * @param column   the column name of the condition, left hand
+     * @param value    the value of the condition, right hand
+     * @param function value's function
+     * @return this criteria
      * @see Operation#lte
      */
     public Criteria lte(String column, Object value, Function function) {
@@ -248,8 +262,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition, left hand
+     * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#gt
      */
     public Criteria gt(String column, Object value) {
@@ -258,9 +273,10 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
-     * @param function
+     * @param column   the column name of the condition, left hand
+     * @param value    the value of the condition, right hand
+     * @param function value's function
+     * @return this criteria
      * @see Operation#gt
      */
     public Criteria gt(String column, Object value, Function function) {
@@ -269,8 +285,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition, left hand
+     * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#gte
      */
     public Criteria gte(String column, Object value) {
@@ -279,9 +296,10 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
-     * @param function
+     * @param column   the column name of the condition, left hand
+     * @param value    the value of the condition, right hand
+     * @param function value's function
+     * @return this criteria
      * @see Operation#gte
      */
     public Criteria gte(String column, Object value, Function function) {
@@ -290,8 +308,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition, left hand
+     * @param value  the value of the condition, right hand
+     * @return this criteria
      * @see Operation#like
      */
     public Criteria like(String column, String value) {
@@ -300,8 +319,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition
+     * @param value  the value of the condition
+     * @return this criteria
      * @see Operation#likes
      */
     public Criteria likes(String column, String value) {
@@ -310,8 +330,9 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
+     * @param column the column name of the condition
+     * @param value  the value of the condition, a collection
+     * @return this criteria
      * @see Operation#in
      */
     public Criteria in(String column, Collection<?> value) {
@@ -323,7 +344,8 @@ public class Criteria {
     }
 
     /**
-     * @param column
+     * @param column the column name of the condition, left hand
+     * @return this criteria
      * @see Operation#nullValue
      */
     public Criteria nullValue(String column) {
@@ -332,7 +354,8 @@ public class Criteria {
     }
 
     /**
-     * @param column
+     * @param column the column name of the condition, left hand
+     * @return this criteria
      * @see Operation#notNull
      */
     public Criteria notNull(String column) {
@@ -341,9 +364,10 @@ public class Criteria {
     }
 
     /**
-     * @param column
-     * @param value
-     * @param value2
+     * @param column the column name of the condition
+     * @param value  the left edge of the range
+     * @param value2 the right edge of the range
+     * @return this criteria
      * @see Operation#between
      */
     public Criteria between(String column, Object value, Object value2) {
@@ -374,6 +398,8 @@ public class Criteria {
 
     /**
      * Get the generated where clause, must call {@link #toSql()} first
+     *
+     * @return the generated where clause
      */
     public String getWhereClause() {
         if (whereClause == null) {
@@ -386,6 +412,7 @@ public class Criteria {
      * Generate where clause SQL fragment, and return a map holding parameter and value entries.
      * This method only calculates once, all subsequent calls will immediately return the cached result, and modifications on the returned Map object will also reflect to the cached one.
      *
+     * @return parameters map
      * @see #toSql(Map)
      */
     public Map<String, Object> toSql() {
@@ -397,7 +424,7 @@ public class Criteria {
             whereClause = "";
             return Collections.emptyMap();
         }
-        if(this.params == null) {
+        if (this.params == null) {
             this.params = new HashMap<>();
         }
         StringBuilder sb = new StringBuilder();
@@ -444,30 +471,32 @@ public class Criteria {
                 continue;
             }
 
+            sb.append(criteria.column);
             switch (criteria.operation) {
                 case in:
-                    sb.append(criteria.column).append(" ").append(criteria.operation.sql).append(" (:").append(criteria.property).append(")");
+                    sb.append(" ").append(criteria.operation.sql).append(" (:").append(criteria.property).append(")");
                     params.put(criteria.property, criteria.value);
                     break;
                 case between:
-                    sb.append(criteria.column).append(" ").append(criteria.operation.sql).append(" :").append(criteria.property).append(" AND :").append(criteria.property2);
+                    sb.append(" ").append(criteria.operation.sql).append(" :").append(criteria.property).append(" AND :").append(criteria.property2);
                     params.put(criteria.property, criteria.value);
                     params.put(criteria.property2, criteria.value2);
                     break;
                 case like:
                 case likes:
-                    sb.append(criteria.column).append(" ").append(criteria.operation.sql).append("(:").append(criteria.property).append(")");
+                    sb.append(" ").append(criteria.operation.sql).append("(:").append(criteria.property).append(")");
                     params.put(criteria.property, criteria.value);
                     break;
                 case isNull:
                 case isNotNull:
-                    sb.append(criteria.column).append(" ").append(criteria.operation.sql);
+                    sb.append(" ").append(criteria.operation.sql);
                     break;
                 default:
+                    sb.append(' ').append(criteria.operation.sql).append(' ');
                     if (criteria.function != null) {
-                        sb.append(criteria.function.sql).append('(').append(criteria.column).append(") ").append(criteria.operation.sql).append(' ').append(criteria.function.sql).append("( :").append(criteria.property).append(')');
+                        sb.append(criteria.function.sql).append("(:").append(criteria.property).append(')');
                     } else {
-                        sb.append(criteria.column).append(" ").append(criteria.operation.sql).append(" :").append(criteria.property);
+                        sb.append(':').append(criteria.property);
                     }
                     params.put(criteria.property, criteria.value);
                     break;

@@ -19,10 +19,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 /**
- * Modified from spring-jdbc:org.springframework.jdbc.core.BeanPropertyRowMapper</br>
+ * Modified from spring-jdbc:org.springframework.jdbc.core.BeanPropertyRowMapper<br>
  * Support column prefix.
  * Created by Dolphin on 2017/3/31
  */
+@SuppressWarnings({"unused", "WeakerAccess"})
 public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AliasBeanPropertyRowMapper.class);
@@ -60,6 +61,7 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
     /**
      * Create a new {@code BeanPropertyRowMapper} for bean-style configuration.
      *
+     * @param alias the table alias
      * @see #setMappedClass
      * @see #setCheckFullyPopulated
      */
@@ -73,6 +75,7 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
      * <p>Consider using the {@link #newInstance} factory method instead,
      * which allows for specifying the mapped type once only.
      *
+     * @param alias       the table's alias
      * @param mappedClass the class that each row should be mapped to
      */
     public AliasBeanPropertyRowMapper(String alias, Class<T> mappedClass) {
@@ -83,6 +86,7 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
     /**
      * Create a new {@code BeanPropertyRowMapper}.
      *
+     * @param alias               the table's alias
      * @param mappedClass         the class that each row should be mapped to
      * @param checkFullyPopulated whether we're strictly validating that
      *                            all bean properties have been mapped from corresponding database fields
@@ -96,6 +100,8 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
 
     /**
      * Set the class that each row should be mapped to.
+     *
+     * @param mappedClass type of the mapped value
      */
     public void setMappedClass(Class<T> mappedClass) {
         if (this.mappedClass == null) {
@@ -119,6 +125,8 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
      * Set whether we're strictly validating that all bean properties have been mapped
      * from corresponding database fields.
      * <p>Default is {@code false}, accepting unpopulated properties in the target bean.
+     *
+     * @param checkFullyPopulated whether we're strictly validating that all bean properties have been mapped
      */
     public void setCheckFullyPopulated(boolean checkFullyPopulated) {
         this.checkFullyPopulated = checkFullyPopulated;
@@ -220,6 +228,8 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
      * Extract the values for all columns in the current row.
      * <p>Utilizes public setters and result set metadata.
      *
+     * @param rs        ResultSet
+     * @param rowNumber the row number
      * @see ResultSetMetaData
      */
     @Override
@@ -321,10 +331,12 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
      * Static factory method to create a new {@code BeanPropertyRowMapper}
      * (with the mapped class specified only once).
      *
+     * @param alias       the table's alias
      * @param mappedClass the class that each row should be mapped to
+     * @return new instance of this class
      */
-    public static <T> BeanPropertyRowMapper<T> newInstance(Class<T> mappedClass) {
-        return new BeanPropertyRowMapper<T>(mappedClass);
+    public static <T> AliasBeanPropertyRowMapper<T> newInstance(String alias, Class<T> mappedClass) {
+        return new AliasBeanPropertyRowMapper<>(alias, mappedClass);
     }
 
 }
