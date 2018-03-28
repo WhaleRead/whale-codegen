@@ -7,13 +7,6 @@
     <groupId>com.whaleread.codegen</groupId>
     <artifactId>parent</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <modules>
-        <module>generator-core</module>
-        <module>whale-generator-maven-plugin</module>
-        <module>generator-ddl-parser-mysql</module>
-        <module>generator-runtime</module>
-        <module>generator-sample</module>
-    </modules>
     <packaging>pom</packaging>
     <properties>
         <javaparser.version>3.5.10</javaparser.version>
@@ -30,6 +23,18 @@
 
     <repositories>
     </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -132,4 +137,69 @@
             </plugins>
         </pluginManagement>
     </build>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>generator-core</module>
+                <module>whale-generator-maven-plugin</module>
+                <module>generator-ddl-parser-mysql</module>
+                <module>generator-runtime</module>
+                <module>generator-sample</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>generator-core</module>
+                <module>whale-generator-maven-plugin</module>
+                <module>generator-ddl-parser-mysql</module>
+                <module>generator-runtime</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.8</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
