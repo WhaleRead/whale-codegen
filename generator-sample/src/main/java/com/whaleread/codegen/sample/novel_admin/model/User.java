@@ -3,14 +3,21 @@ package com.whaleread.codegen.sample.novel_admin.model;
 import java.util.Date;
 import javax.annotation.Generated;
 
+/**
+ * Database Table Remarks:
+ * 用户表
+ *
+ * <br/>
+ * table: novel_admin.user
+ */
 @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.user")
 public class User {
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public static final String BASE_COLUMNS = "id, username, `password`, display_name, avatar, email, `status`, `type`, remark, gmt_create, gmt_modify";
+    public static final String BASE_COLUMNS = "id, username, `password`, display_name, avatar, email, age, `status`, `type`, remark, gmt_create, gmt_modify";
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public static final String ALIASED_BASE_COLUMNS = "u.id AS u_id, u.username AS u_username, u.`password` AS u_password, u.display_name AS u_display_name, u.avatar AS u_avatar, u.email AS u_email, u.`status` AS u_status, u.`type` AS u_type, u.remark AS u_remark, u.gmt_create AS u_gmt_create, u.gmt_modify AS u_gmt_modify";
+    public static final String ALIASED_BASE_COLUMNS = "u.id AS u_id, u.username AS u_username, u.`password` AS u_password, u.display_name AS u_display_name, u.avatar AS u_avatar, u.email AS u_email, u.age AS u_age, u.`status` AS u_status, u.`type` AS u_type, u.remark AS u_remark, u.gmt_create AS u_gmt_create, u.gmt_modify AS u_gmt_modify";
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String TABLE_NAME = "user";
@@ -53,6 +60,12 @@ public class User {
      */
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_EMAIL = "email";
+
+    /**
+     * column: novel_admin.user.age
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public static final String COLUMN_AGE = "age";
 
     /**
      * Database Column Remarks:
@@ -127,13 +140,19 @@ public class User {
     private String email;
 
     /**
+     * column: novel_admin.user.age
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.user.age")
+    private Integer age;
+
+    /**
      * Database Column Remarks:
      * , 0:,1:
      *
      * column: novel_admin.user.status
      */
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.user.status")
-    private Byte status;
+    private Integer status;
 
     /**
      * Database Column Remarks:
@@ -283,12 +302,32 @@ public class User {
     }
 
     /**
+     * column: novel_admin.user.age
+     *
+     * @return the value of novel_admin.user.age
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.user.age")
+    public Integer getAge() {
+        return age;
+    }
+
+    /**
+     * column: novel_admin.user.age
+     *
+     * @param age the value for novel_admin.user.age
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.user.age")
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    /**
      * column: novel_admin.user.status
      *
      * @return the value of novel_admin.user.status
      */
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.user.status")
-    public Byte getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -298,7 +337,7 @@ public class User {
      * @param status the value for novel_admin.user.status
      */
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.user.status")
-    public void setStatus(Byte status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

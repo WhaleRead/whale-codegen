@@ -7,6 +7,7 @@ CREATE TABLE `user` (
   `display_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `avatar` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `age` int NOT NULL DEFAULT 0,
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT ', 0:,1:',
   `type` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT 'admin' COMMENT '账号类型,admin:管理,channel:渠道,author:作者',
   `remark` varchar(255) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',

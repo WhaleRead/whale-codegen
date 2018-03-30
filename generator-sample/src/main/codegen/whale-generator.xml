@@ -11,11 +11,11 @@
             <property name="addRemarkComments" value="true"/>
         </commentGenerator>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://9ytest.com:33062/novel_admin?useUnicode=true" userId="app" password="123456"/>
-        <!--<connectionFactory type="DDL">-->
-            <!--<property name="parser" value="com.whaleread.codegen.api.ddl.parser.MySqlDdlParser" />-->
-            <!--<property name="path" value="src/main/codegen/ddl/novel_admin.sql" />-->
-        <!--</connectionFactory>-->
+        <!--<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://9ytest.com:33062/novel_admin?useUnicode=true" userId="app" password="123456"/>-->
+        <connectionFactory type="DDL">
+            <property name="parser" value="com.whaleread.codegen.api.ddl.parser.MySqlDdlParser" />
+            <property name="path" value="src/main/codegen/ddl/novel_admin.sql" />
+        </connectionFactory>
 
         <javaTypeResolver >
             <property name="forceBigDecimals" value="false" />

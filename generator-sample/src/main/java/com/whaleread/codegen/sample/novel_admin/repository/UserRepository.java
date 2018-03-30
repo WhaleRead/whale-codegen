@@ -2,10 +2,12 @@ package com.whaleread.codegen.sample.novel_admin.repository;
 
 import com.whaleread.codegen.runtime.jdbc.Criteria;
 import com.whaleread.codegen.runtime.jdbc.spring.AliasBeanPropertyRowMapper;
+import com.whaleread.codegen.sample.novel_admin.dto.UserDTO;
 import com.whaleread.codegen.sample.novel_admin.model.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Generated;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,10 @@ import org.springframework.stereotype.Repository;
 public class UserRepository extends NamedParameterJdbcDaoSupport {
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<User> rowMapper = new AliasBeanPropertyRowMapper<>(User.TABLE_ALIAS, User.class);
+    private RowMapper<UserDTO> rowMapper = new AliasBeanPropertyRowMapper<>(User.TABLE_ALIAS, UserDTO.class);
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    private static final String INSERT_SQL = "INSERT INTO " + User.TABLE_NAME + "(username, `password`, display_name, avatar, email, `status`, `type`, remark) VALUES (:username, :password, :displayName, :avatar, :email, :status, :type, :remark)";
+    private static final String INSERT_SQL = "INSERT INTO " + User.TABLE_NAME + "(username, `password`, display_name, avatar, email, age, `status`, `type`, remark) VALUES (:username, :password, :displayName, :avatar, :email, :age, :status, :type, :remark)";
 
     @Autowired
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
@@ -36,60 +38,20 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public User selectByPrimaryKey(Long id) {
-        return getJdbcTemplate().query("SELECT " + User.BASE_COLUMNS + " FROM " + User.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? rowMapper.mapRow(rs, 0) : null);
+    public Optional<UserDTO> selectByPrimaryKey(Long id) {
+        return getJdbcTemplate().query("SELECT " + User.BASE_COLUMNS + " FROM " + User.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public void updateByPrimaryKeySelective(User record) {
-        StringBuilder fragment = new StringBuilder();
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", record.getId());
-        if (record.getUsername() != null) {
-            fragment.append("username = :username, ");
-            params.put("username", record.getUsername());
-        }
-        if (record.getPassword() != null) {
-            fragment.append("`password` = :password, ");
-            params.put("password", record.getPassword());
-        }
-        if (record.getDisplayName() != null) {
-            fragment.append("display_name = :displayName, ");
-            params.put("displayName", record.getDisplayName());
-        }
-        if (record.getAvatar() != null) {
-            fragment.append("avatar = :avatar, ");
-            params.put("avatar", record.getAvatar());
-        }
-        if (record.getEmail() != null) {
-            fragment.append("email = :email, ");
-            params.put("email", record.getEmail());
-        }
-        if (record.getStatus() != null) {
-            fragment.append("`status` = :status, ");
-            params.put("status", record.getStatus());
-        }
-        if (record.getType() != null) {
-            fragment.append("`type` = :type, ");
-            params.put("type", record.getType());
-        }
-        if (record.getRemark() != null) {
-            fragment.append("remark = :remark, ");
-            params.put("remark", record.getRemark());
-        }
-        if (record.getGmtCreate() != null) {
-            fragment.append("gmt_create = :gmtCreate, ");
-            params.put("gmtCreate", record.getGmtCreate());
-        }
-        if (record.getGmtModify() != null) {
-            fragment.append("gmt_modify = :gmtModify, ");
-            params.put("gmtModify", record.getGmtModify());
-        }
-        if (fragment.length() == 0) {
-            return;
-        }
-        fragment.setLength(fragment.length() - 2);
-        getNamedParameterJdbcTemplate().update("UPDATE " + User.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
+    public int countByCriteria(Criteria criteria) {
+        Map<String, Object> params = criteria.toSql();
+        return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause(), params, int.class);
+    }
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public List<UserDTO> selectByCriteria(Criteria criteria, int offset, int count) {
+        Map<String, Object> params = criteria.toSql();
+        return getNamedParameterJdbcTemplate().query("SELECT " + User.ALIASED_BASE_COLUMNS + " FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
@@ -100,6 +62,7 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
         params.put("displayName", record.getDisplayName());
         params.put("avatar", record.getAvatar());
         params.put("email", record.getEmail());
+        params.put("age", record.getAge());
         params.put("status", record.getStatus());
         params.put("type", record.getType());
         params.put("remark", record.getRemark());
@@ -138,6 +101,11 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
             valuesFragment.append(":email, ");
             params.put("email", record.getEmail());
         }
+        if (record.getAge() != null) {
+            columnsFragment.append("age, ");
+            valuesFragment.append(":age, ");
+            params.put("age", record.getAge());
+        }
         if (record.getStatus() != null) {
             columnsFragment.append("`status`, ");
             valuesFragment.append(":status, ");
@@ -173,15 +141,59 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public int countByCriteria(Criteria criteria) {
-        Map<String, Object> params = criteria.toSql();
-        return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause(), params, int.class);
-    }
-
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public List<User> selectByCriteria(Criteria criteria, int offset, int count) {
-        Map<String, Object> params = criteria.toSql();
-        return getNamedParameterJdbcTemplate().query("SELECT " + User.ALIASED_BASE_COLUMNS + " FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
+    public void updateByPrimaryKeySelective(User record) {
+        StringBuilder fragment = new StringBuilder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", record.getId());
+        if (record.getUsername() != null) {
+            fragment.append("username = :username, ");
+            params.put("username", record.getUsername());
+        }
+        if (record.getPassword() != null) {
+            fragment.append("`password` = :password, ");
+            params.put("password", record.getPassword());
+        }
+        if (record.getDisplayName() != null) {
+            fragment.append("display_name = :displayName, ");
+            params.put("displayName", record.getDisplayName());
+        }
+        if (record.getAvatar() != null) {
+            fragment.append("avatar = :avatar, ");
+            params.put("avatar", record.getAvatar());
+        }
+        if (record.getEmail() != null) {
+            fragment.append("email = :email, ");
+            params.put("email", record.getEmail());
+        }
+        if (record.getAge() != null) {
+            fragment.append("age = :age, ");
+            params.put("age", record.getAge());
+        }
+        if (record.getStatus() != null) {
+            fragment.append("`status` = :status, ");
+            params.put("status", record.getStatus());
+        }
+        if (record.getType() != null) {
+            fragment.append("`type` = :type, ");
+            params.put("type", record.getType());
+        }
+        if (record.getRemark() != null) {
+            fragment.append("remark = :remark, ");
+            params.put("remark", record.getRemark());
+        }
+        if (record.getGmtCreate() != null) {
+            fragment.append("gmt_create = :gmtCreate, ");
+            params.put("gmtCreate", record.getGmtCreate());
+        }
+        if (record.getGmtModify() != null) {
+            fragment.append("gmt_modify = :gmtModify, ");
+            params.put("gmtModify", record.getGmtModify());
+        }
+        if (fragment.length() == 0) {
+            return;
+        }
+        fragment.setLength(fragment.length() - 2);
+        getNamedParameterJdbcTemplate().update("UPDATE " + User.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")

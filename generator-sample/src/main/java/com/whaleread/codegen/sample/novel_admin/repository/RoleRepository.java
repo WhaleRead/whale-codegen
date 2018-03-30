@@ -1,10 +1,12 @@
 package com.whaleread.codegen.sample.novel_admin.repository;
 
 import com.whaleread.codegen.runtime.jdbc.Criteria;
+import com.whaleread.codegen.sample.novel_admin.dto.RoleDTO;
 import com.whaleread.codegen.sample.novel_admin.model.Role;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.annotation.Generated;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ import org.springframework.stereotype.Repository;
 public class RoleRepository extends NamedParameterJdbcDaoSupport {
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<Role> rowMapper = new BeanPropertyRowMapper<>(Role.class);
+    private RowMapper<RoleDTO> rowMapper = new BeanPropertyRowMapper<>(RoleDTO.class);
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     private static final String INSERT_SQL = "INSERT INTO " + Role.TABLE_NAME + "(`name`, `value`, remark) VALUES (:name, :value, :remark)";
@@ -36,40 +38,20 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public Role selectByPrimaryKey(Long id) {
-        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? rowMapper.mapRow(rs, 0) : null);
+    public Optional<RoleDTO> selectByPrimaryKey(Long id) {
+        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public void updateByPrimaryKeySelective(Role record) {
-        StringBuilder fragment = new StringBuilder();
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", record.getId());
-        if (record.getName() != null) {
-            fragment.append("`name` = :name, ");
-            params.put("name", record.getName());
-        }
-        if (record.getValue() != null) {
-            fragment.append("`value` = :value, ");
-            params.put("value", record.getValue());
-        }
-        if (record.getRemark() != null) {
-            fragment.append("remark = :remark, ");
-            params.put("remark", record.getRemark());
-        }
-        if (record.getGmtCreate() != null) {
-            fragment.append("gmt_create = :gmtCreate, ");
-            params.put("gmtCreate", record.getGmtCreate());
-        }
-        if (record.getGmtModify() != null) {
-            fragment.append("gmt_modify = :gmtModify, ");
-            params.put("gmtModify", record.getGmtModify());
-        }
-        if (fragment.length() == 0) {
-            return;
-        }
-        fragment.setLength(fragment.length() - 2);
-        getNamedParameterJdbcTemplate().update("UPDATE " + Role.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
+    public int countByCriteria(Criteria criteria) {
+        Map<String, Object> params = criteria.toSql();
+        return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause(), params, int.class);
+    }
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public List<RoleDTO> selectByCriteria(Criteria criteria, int offset, int count) {
+        Map<String, Object> params = criteria.toSql();
+        return getNamedParameterJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
@@ -123,15 +105,35 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public int countByCriteria(Criteria criteria) {
-        Map<String, Object> params = criteria.toSql();
-        return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause(), params, int.class);
-    }
-
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public List<Role> selectByCriteria(Criteria criteria, int offset, int count) {
-        Map<String, Object> params = criteria.toSql();
-        return getNamedParameterJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
+    public void updateByPrimaryKeySelective(Role record) {
+        StringBuilder fragment = new StringBuilder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", record.getId());
+        if (record.getName() != null) {
+            fragment.append("`name` = :name, ");
+            params.put("name", record.getName());
+        }
+        if (record.getValue() != null) {
+            fragment.append("`value` = :value, ");
+            params.put("value", record.getValue());
+        }
+        if (record.getRemark() != null) {
+            fragment.append("remark = :remark, ");
+            params.put("remark", record.getRemark());
+        }
+        if (record.getGmtCreate() != null) {
+            fragment.append("gmt_create = :gmtCreate, ");
+            params.put("gmtCreate", record.getGmtCreate());
+        }
+        if (record.getGmtModify() != null) {
+            fragment.append("gmt_modify = :gmtModify, ");
+            params.put("gmtModify", record.getGmtModify());
+        }
+        if (fragment.length() == 0) {
+            return;
+        }
+        fragment.setLength(fragment.length() - 2);
+        getNamedParameterJdbcTemplate().update("UPDATE " + Role.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
