@@ -1,4 +1,4 @@
-/**
+/*
  *    Copyright 2006-2017 the original author or authors.
  *
  *    Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,6 @@ import java.sql.Types;
 import java.util.*;
 
 /**
- * 
  * @author Jeff Butler
  */
 public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
@@ -39,6 +38,11 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
     protected Context context;
 
     protected boolean forceBigDecimals;
+
+    /**
+     * force int for tinyint data type, default true
+     */
+    protected boolean forceInt = true;
 
     protected Map<Integer, JdbcTypeInformation> typeMap;
 
@@ -124,6 +128,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
         forceBigDecimals = StringUtility
                 .isTrue(properties
                         .getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_BIG_DECIMALS));
+        forceInt = !StringUtility.isFalse(properties.getProperty(PropertyRegistry.TYPE_RESOLVER_FORCE_INT));
     }
 
     @Override
@@ -140,25 +145,39 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
         return answer;
     }
-    
+
     protected FullyQualifiedJavaType overrideDefaultType(IntrospectedColumn column, FullyQualifiedJavaType defaultType) {
         FullyQualifiedJavaType answer = defaultType;
 
         switch (column.getJdbcType()) {
-        case Types.BIT:
-            answer = calculateBitReplacement(column, defaultType);
-            break;
-        case Types.DECIMAL:
-        case Types.NUMERIC:
-            answer = calculateBigDecimalReplacement(column, defaultType);
-            break;
-        default:
-            break;
+            case Types.TINYINT:
+                answer = calculateTinyIntReplacement(column, defaultType);
+                break;
+            case Types.BIT:
+                answer = calculateBitReplacement(column, defaultType);
+                break;
+            case Types.DECIMAL:
+            case Types.NUMERIC:
+                answer = calculateBigDecimalReplacement(column, defaultType);
+                break;
+            default:
+                break;
         }
 
         return answer;
     }
-    
+
+    protected FullyQualifiedJavaType calculateTinyIntReplacement(IntrospectedColumn column, FullyQualifiedJavaType defaultType) {
+        FullyQualifiedJavaType answer;
+
+        if (forceInt) {
+            answer = new FullyQualifiedJavaType(Integer.class.getName());
+        } else {
+            answer = defaultType;
+        }
+        return answer;
+    }
+
     protected FullyQualifiedJavaType calculateBitReplacement(IntrospectedColumn column, FullyQualifiedJavaType defaultType) {
         FullyQualifiedJavaType answer;
 
@@ -170,7 +189,7 @@ public class JavaTypeResolverDefaultImpl implements JavaTypeResolver {
 
         return answer;
     }
-    
+
     protected FullyQualifiedJavaType calculateBigDecimalReplacement(IntrospectedColumn column, FullyQualifiedJavaType defaultType) {
         FullyQualifiedJavaType answer;
 
