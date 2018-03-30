@@ -95,7 +95,11 @@ public class MySqlDdlParser extends MySqlParserBaseListener implements DdlParser
         dataTypeVisitor.visit(columnDefinitionContext.dataType());
         ColumnConstraintVisitor columnConstraintVisitor = new ColumnConstraintVisitor(column);
         columnDefinitionContext.columnConstraint().forEach(columnConstraintVisitor::visit);
-        column.setOriginType(column.getOriginType().toUpperCase());
+        String originType = column.getOriginType().toUpperCase();
+        if("INT".equals(originType)) {
+            originType = "INTEGER";
+        }
+        column.setOriginType(originType);
         column.setType(JdbcTypeNameTranslator.getJdbcType(column.getOriginType()));
         if (column.isPrimaryKey()) {
             currentTable.addPrimaryKey(column.getName());
