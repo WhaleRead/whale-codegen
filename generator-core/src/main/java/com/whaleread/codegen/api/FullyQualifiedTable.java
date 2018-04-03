@@ -261,7 +261,7 @@ public class FullyQualifiedTable {
         if (stringHasValue(domainObjectProperty)) {
             return domainObjectProperty;
         }
-        domainObjectProperty = JavaBeansUtil.getCamelCaseString(getDomainObjectName(), false);
+        domainObjectProperty = JavaBeansUtil.getValidPropertyName(getDomainObjectName());
         return domainObjectProperty;
     }
 
