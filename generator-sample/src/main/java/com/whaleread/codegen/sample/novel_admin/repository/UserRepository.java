@@ -141,62 +141,6 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public void updateByPrimaryKeySelective(User record) {
-        StringBuilder fragment = new StringBuilder();
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", record.getId());
-        if (record.getUsername() != null) {
-            fragment.append("username = :username, ");
-            params.put("username", record.getUsername());
-        }
-        if (record.getPassword() != null) {
-            fragment.append("`password` = :password, ");
-            params.put("password", record.getPassword());
-        }
-        if (record.getDisplayName() != null) {
-            fragment.append("display_name = :displayName, ");
-            params.put("displayName", record.getDisplayName());
-        }
-        if (record.getAvatar() != null) {
-            fragment.append("avatar = :avatar, ");
-            params.put("avatar", record.getAvatar());
-        }
-        if (record.getEmail() != null) {
-            fragment.append("email = :email, ");
-            params.put("email", record.getEmail());
-        }
-        if (record.getAge() != null) {
-            fragment.append("age = :age, ");
-            params.put("age", record.getAge());
-        }
-        if (record.getStatus() != null) {
-            fragment.append("`status` = :status, ");
-            params.put("status", record.getStatus());
-        }
-        if (record.getType() != null) {
-            fragment.append("`type` = :type, ");
-            params.put("type", record.getType());
-        }
-        if (record.getRemark() != null) {
-            fragment.append("remark = :remark, ");
-            params.put("remark", record.getRemark());
-        }
-        if (record.getGmtCreate() != null) {
-            fragment.append("gmt_create = :gmtCreate, ");
-            params.put("gmtCreate", record.getGmtCreate());
-        }
-        if (record.getGmtModify() != null) {
-            fragment.append("gmt_modify = :gmtModify, ");
-            params.put("gmtModify", record.getGmtModify());
-        }
-        if (fragment.length() == 0) {
-            return;
-        }
-        fragment.setLength(fragment.length() - 2);
-        getNamedParameterJdbcTemplate().update("UPDATE " + User.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
-    }
-
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int deleteByPrimaryKey(Long id) {
         return getJdbcTemplate().update("DELETE FROM " + User.TABLE_NAME + " WHERE id = ? ", id);
     }

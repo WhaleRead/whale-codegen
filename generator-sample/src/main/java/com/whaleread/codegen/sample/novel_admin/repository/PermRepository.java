@@ -111,42 +111,6 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public void updateByPrimaryKeySelective(Perm record) {
-        StringBuilder fragment = new StringBuilder();
-        Map<String, Object> params = new HashMap<>();
-        params.put("id", record.getId());
-        if (record.getName() != null) {
-            fragment.append("`name` = :name, ");
-            params.put("name", record.getName());
-        }
-        if (record.getValue() != null) {
-            fragment.append("`value` = :value, ");
-            params.put("value", record.getValue());
-        }
-        if (record.getGroupId() != null) {
-            fragment.append("group_id = :groupId, ");
-            params.put("groupId", record.getGroupId());
-        }
-        if (record.getRemark() != null) {
-            fragment.append("remark = :remark, ");
-            params.put("remark", record.getRemark());
-        }
-        if (record.getGmtCreate() != null) {
-            fragment.append("gmt_create = :gmtCreate, ");
-            params.put("gmtCreate", record.getGmtCreate());
-        }
-        if (record.getGmtModify() != null) {
-            fragment.append("gmt_modify = :gmtModify, ");
-            params.put("gmtModify", record.getGmtModify());
-        }
-        if (fragment.length() == 0) {
-            return;
-        }
-        fragment.setLength(fragment.length() - 2);
-        getNamedParameterJdbcTemplate().update("UPDATE " + Perm.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
-    }
-
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int deleteByPrimaryKey(Long id) {
         return getJdbcTemplate().update("DELETE FROM " + Perm.TABLE_NAME + " WHERE id = ? ", id);
     }

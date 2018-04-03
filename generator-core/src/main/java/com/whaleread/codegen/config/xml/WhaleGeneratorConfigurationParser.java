@@ -31,7 +31,6 @@ package com.whaleread.codegen.config.xml;
 import com.whaleread.codegen.config.*;
 import com.whaleread.codegen.exception.XMLParserException;
 import com.whaleread.codegen.internal.ObjectFactory;
-import com.whaleread.codegen.internal.util.StringUtility;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -42,9 +41,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import static com.whaleread.codegen.internal.util.StringUtility.isFalse;
-import static com.whaleread.codegen.internal.util.StringUtility.isTrue;
-import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
+import static com.whaleread.codegen.internal.util.StringUtility.*;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 
 /**
@@ -214,59 +211,6 @@ public class WhaleGeneratorConfigurationParser {
             tc.setAlias(alias);
         }
 
-        String enableInsert = attributes.getProperty("enableInsert"); //$NON-NLS-1$
-        if (stringHasValue(enableInsert)) {
-            tc.setInsertStatementEnabled(isTrue(enableInsert));
-        }
-
-        String enableSelectByPrimaryKey = attributes
-                .getProperty("enableSelectByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableSelectByPrimaryKey)) {
-            tc.setSelectByPrimaryKeyStatementEnabled(
-                    isTrue(enableSelectByPrimaryKey));
-        }
-
-        String enableSelectByExample = attributes
-                .getProperty("enableSelectByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableSelectByExample)) {
-            tc.setSelectByExampleStatementEnabled(
-                    isTrue(enableSelectByExample));
-        }
-
-        String enableUpdateByPrimaryKey = attributes
-                .getProperty("enableUpdateByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByPrimaryKey)) {
-            tc.setUpdateByPrimaryKeyStatementEnabled(
-                    isTrue(enableUpdateByPrimaryKey));
-        }
-
-        String enableDeleteByPrimaryKey = attributes
-                .getProperty("enableDeleteByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableDeleteByPrimaryKey)) {
-            tc.setDeleteByPrimaryKeyStatementEnabled(
-                    isTrue(enableDeleteByPrimaryKey));
-        }
-
-        String enableDeleteByExample = attributes
-                .getProperty("enableDeleteByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableDeleteByExample)) {
-            tc.setDeleteByExampleStatementEnabled(
-                    isTrue(enableDeleteByExample));
-        }
-
-        String enableCountByExample = attributes
-                .getProperty("enableCountByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableCountByExample)) {
-            tc.setCountByExampleStatementEnabled(
-                    isTrue(enableCountByExample));
-        }
-
-        String enableUpdateByExample = attributes
-                .getProperty("enableUpdateByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByExample)) {
-            tc.setUpdateByExampleStatementEnabled(
-                    isTrue(enableUpdateByExample));
-        }
 
 //        String selectByPrimaryKeyQueryId = attributes
 //                .getProperty("selectByPrimaryKeyQueryId"); //$NON-NLS-1$
@@ -331,7 +275,89 @@ public class WhaleGeneratorConfigurationParser {
             }
         }
         tc.setDtoEnabled(context.getBuiltInGeneratorConfiguration().isDtoEnabled() && !isFalse(tc.getProperty("dtoEnabled")));
+        tc.setDaoEnabled(context.getBuiltInGeneratorConfiguration().isDaoEnabled() && !isFalse(tc.getProperty("daoEnabled")));
         tc.setServiceEnabled(context.getBuiltInGeneratorConfiguration().isServiceEnabled() && !isFalse(tc.getProperty("serviceEnabled")));
+
+        String enableInsert = tc.getProperty("enableInsert"); //$NON-NLS-1$
+        if (stringHasValue(enableInsert)) {
+            tc.setInsertStatementEnabled(isTrue(enableInsert));
+        }
+
+        String enableSelectByPrimaryKey = tc
+                .getProperty("enableSelectByPrimaryKey"); //$NON-NLS-1$
+        if (stringHasValue(enableSelectByPrimaryKey)) {
+            tc.setSelectByPrimaryKeyStatementEnabled(
+                    isTrue(enableSelectByPrimaryKey));
+        }
+
+        String enableSelectByExample = tc
+                .getProperty("enableSelectByExample"); //$NON-NLS-1$
+        if (stringHasValue(enableSelectByExample)) {
+            tc.setSelectByExampleStatementEnabled(
+                    isTrue(enableSelectByExample));
+        }
+
+        String enableUpdateByPrimaryKey = tc
+                .getProperty("enableUpdateByPrimaryKey"); //$NON-NLS-1$
+        if (stringHasValue(enableUpdateByPrimaryKey)) {
+            tc.setUpdateByPrimaryKeyStatementEnabled(
+                    isTrue(enableUpdateByPrimaryKey));
+        }
+
+        String enableUpdateByPrimaryKeySelective = tc
+                .getProperty("enableUpdateByPrimaryKeySelective"); //$NON-NLS-1$
+        if (stringHasValue(enableUpdateByPrimaryKeySelective)) {
+            tc.setUpdateByPrimaryKeySelectiveStatementEnabled(
+                    isTrue(enableUpdateByPrimaryKeySelective));
+        }
+
+        String enableDeleteByPrimaryKey = tc
+                .getProperty("enableDeleteByPrimaryKey"); //$NON-NLS-1$
+        if (stringHasValue(enableDeleteByPrimaryKey)) {
+            tc.setDeleteByPrimaryKeyStatementEnabled(
+                    isTrue(enableDeleteByPrimaryKey));
+        }
+
+        String enableDeleteByExample = tc
+                .getProperty("enableDeleteByExample"); //$NON-NLS-1$
+        if (stringHasValue(enableDeleteByExample)) {
+            tc.setDeleteByExampleStatementEnabled(
+                    isTrue(enableDeleteByExample));
+        }
+
+        String enableCountByExample = tc
+                .getProperty("enableCountByExample"); //$NON-NLS-1$
+        if (stringHasValue(enableCountByExample)) {
+            tc.setCountByExampleStatementEnabled(
+                    isTrue(enableCountByExample));
+        }
+
+        String enableUpdateByExample = tc
+                .getProperty("enableUpdateByExample"); //$NON-NLS-1$
+        if (stringHasValue(enableUpdateByExample)) {
+            tc.setUpdateByExampleStatementEnabled(
+                    isTrue(enableUpdateByExample));
+        }
+
+        String enableSelectByCriteria = tc.getProperty("enableSelectByCriteria");
+        if (stringHasValue(enableSelectByCriteria)) {
+            tc.setSelectByCriteriaStatementEnabled(isTrue(enableSelectByCriteria));
+        }
+
+        String enableDeleteByCriteria = tc.getProperty("enableDeleteByCriteria");
+        if (stringHasValue(enableDeleteByCriteria)) {
+            tc.setDeleteByCriteriaStatementEnabled(isTrue(enableDeleteByCriteria));
+        }
+
+        String enableUpdateByCriteria = tc.getProperty("enableUpdateByCriteria");
+        if (stringHasValue(enableUpdateByCriteria)) {
+            tc.setUpdateByCriteriaStatementEnabled(isTrue(enableUpdateByCriteria));
+        }
+
+        String enableInsertSelective = tc.getProperty("enableInsertSelective");
+        if (stringHasValue(enableInsertSelective)) {
+            tc.setInsertSelectiveStatementEnabled(isTrue(enableInsertSelective));
+        }
     }
 
     private void parseColumnOverride(TableConfiguration tc, Node node) {
@@ -764,7 +790,7 @@ public class WhaleGeneratorConfigurationParser {
      * This method resolve a property from one of the three sources: system properties,
      * properties loaded from the &lt;properties&gt; configuration element, and
      * "extra" properties that may be supplied by the Maven or Ant environments.
-     * <p>
+     *
      * <p>If there is a name collision, system properties take precedence, followed by
      * configuration properties, followed by extra properties.
      *

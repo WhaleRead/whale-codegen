@@ -32,6 +32,9 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
+        if (!introspectedTable.getTableConfiguration().isDaoEnabled()) {
+            return Collections.emptyList();
+        }
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(getString("Progress.8", table.toString())); //$NON-NLS-1$
         Plugin plugins = context.getPlugins();
@@ -215,6 +218,8 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
     }
 
     private void addInsertSelectiveMethod(TopLevelClass topLevelClass) {
+        topLevelClass.addImportedType(Map.class.getName());
+        topLevelClass.addImportedType(HashMap.class.getName());
         Method method = new Method("insertSelective");
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getModelType()), "record"));

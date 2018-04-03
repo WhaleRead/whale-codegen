@@ -44,6 +44,10 @@ public class TableConfiguration extends PropertyHolder {
 
     @Getter
     @Setter
+    private boolean daoEnabled;
+
+    @Getter
+    @Setter
     private boolean serviceEnabled = true;
 
     @Getter
@@ -72,11 +76,11 @@ public class TableConfiguration extends PropertyHolder {
 
     @Getter
     @Setter
-    private boolean countByCriteriaStatementEnabled = true;
+    private boolean updateByPrimaryKeyStatementEnabled;
 
     @Getter
     @Setter
-    private boolean updateByPrimaryKeyStatementEnabled = true;
+    private boolean updateByPrimaryKeySelectiveStatementEnabled = true;
 
     @Getter
     @Setter
@@ -93,7 +97,7 @@ public class TableConfiguration extends PropertyHolder {
 
     @Getter
     @Setter
-    private boolean updateByExampleStatementEnabled = true;
+    private boolean updateByExampleStatementEnabled;
 
     @Getter
     @Setter
@@ -241,7 +245,11 @@ public class TableConfiguration extends PropertyHolder {
                 || deleteByExampleStatementEnabled
                 || deleteByPrimaryKeyStatementEnabled
                 || countByExampleStatementEnabled
-                || updateByExampleStatementEnabled;
+                || updateByExampleStatementEnabled
+                || updateByCriteriaStatementEnabled
+                || deleteByCriteriaStatementEnabled
+                || insertSelectiveStatementEnabled
+                || updateByPrimaryKeySelectiveStatementEnabled;
     }
 
     public void setGeneratedKey(GeneratedKey generatedKey) {

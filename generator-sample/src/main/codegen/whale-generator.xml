@@ -28,6 +28,18 @@
             <property name="daoEnabled" value="true"/>
         </builtInGenerator>
 
+        <table tableName="foo" catalog="novel_admin" alias="f"/>
+
+        <table tableName="boo" catalog="novel_admin" alias="b">
+            <property name="enableInsert" value="false"/>
+            <property name="enableSelectByPrimaryKey" value="false"/>
+            <property name="enableSelectByCriteria" value="false"/>
+            <property name="enableUpdateByPrimaryKey" value="false"/>
+            <property name="enableDeleteByPrimaryKey" value="false"/>
+            <property name="enableDeleteByCriteria" value="false"/>
+            <property name="enableUpdateByCriteria" value="false"/>
+        </table>
+
         <table tableName="user" catalog="novel_admin" alias="u">
         </table>
 
