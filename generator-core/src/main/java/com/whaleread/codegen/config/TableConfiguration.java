@@ -40,6 +40,10 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 public class TableConfiguration extends PropertyHolder {
     @Getter
     @Setter
+    private boolean enableModel;
+
+    @Getter
+    @Setter
     private boolean enableDTO;
 
     @Getter

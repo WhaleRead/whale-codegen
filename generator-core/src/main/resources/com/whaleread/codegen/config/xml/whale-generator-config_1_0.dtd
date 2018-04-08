@@ -106,6 +106,7 @@
         <!--
           The builtInGenerator element is used to define properties of the BuiltIn Generator.
           The BuiltIn Generator builds builtin classes such as record classes, dto classes, dao classes, service classes etc..
+          enableModel: whether generate models, default true;
           enableDTO: whether generate DTOs, default false;
           enableDAO: whether generate Spring JDBC repositories, default false;
           enableService: whether generate Spring CRUD services, default false;
@@ -138,6 +139,7 @@
         <!--
           The table element is used to specify a database table that will be the source information
           for a set of generated objects.
+          enableModel: whether generate models, default true;
           enableDTO: whether generate DTOs, default false;
           enableDAO: whether generate Spring JDBC repositories, default false;
           enableService: whether generate Spring CRUD services, default false;

@@ -275,6 +275,7 @@ public class WhaleGeneratorConfigurationParser {
                 parseColumnRenamingRule(tc, childNode);
             }
         }
+        tc.setEnableModel(context.getBuiltInGeneratorConfiguration().isEnableModel() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_MODEL)));
         tc.setEnableDTO(context.getBuiltInGeneratorConfiguration().isEnableDTO() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_DTO)));
         tc.setEnableDAO(context.getBuiltInGeneratorConfiguration().isEnableDAO() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_DAO)));
         tc.setEnableService(context.getBuiltInGeneratorConfiguration().isEnableService() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_SERVICE)));
@@ -562,6 +563,7 @@ public class WhaleGeneratorConfigurationParser {
         String daoSuffix = configuration.getProperty(BUILT_IN_DAO_SUFFIX);
         String serviceSuffix = configuration.getProperty(BUILT_IN_SERVICE_SUFFIX);
 
+        String enableModel = configuration.getProperty(BUILT_IN_ENABLE_MODEL);
         String enableDTO = configuration.getProperty(BUILT_IN_ENABLE_DTO);
         String enableDAO = configuration.getProperty(BUILT_IN_ENABLE_DAO);
         String enableService = configuration.getProperty(BUILT_IN_ENABLE_SERVICE);
@@ -597,6 +599,10 @@ public class WhaleGeneratorConfigurationParser {
         }
         if (stringHasValue(serviceSuffix)) {
             configuration.setServiceSuffix(serviceSuffix);
+        }
+
+        if(stringHasValue(enableModel)) {
+            configuration.setEnableModel(Boolean.parseBoolean(enableModel));
         }
 
         if (stringHasValue(enableDTO)) {

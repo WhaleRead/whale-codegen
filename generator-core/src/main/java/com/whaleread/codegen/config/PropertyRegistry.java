@@ -79,6 +79,7 @@ public class PropertyRegistry {
     public static final String BUILT_IN_SERVICE_SUFFIX = "serviceSuffix";
 
     public static final String BUILT_IN_SERVICE_SUBPACKAGE = "serviceSubPackage";
+    public static final String BUILT_IN_ENABLE_MODEL = "enableModel";
     public static final String BUILT_IN_ENABLE_DTO = "enableDTO";
     public static final String BUILT_IN_ENABLE_DAO = "enableDAO";
     public static final String BUILT_IN_ENABLE_SERVICE = "enableService";

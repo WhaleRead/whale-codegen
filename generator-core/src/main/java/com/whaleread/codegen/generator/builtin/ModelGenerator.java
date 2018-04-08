@@ -9,6 +9,7 @@ import com.whaleread.codegen.generator.AbstractJavaGenerator;
 import com.whaleread.codegen.generator.RootClassInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.whaleread.codegen.internal.util.JavaBeansUtil.*;
@@ -21,6 +22,9 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 public class ModelGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
+        if (!introspectedTable.getTableConfiguration().isEnableModel()) {
+            return Collections.emptyList();
+        }
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(getString("Progress.8", table.toString())); //$NON-NLS-1$
         Plugin plugins = context.getPlugins();

@@ -26,11 +26,13 @@ public class IntrospectedTableWhaleImpl extends IntrospectedTable {
 
     @Override
     public void calculateGenerators(List<String> warnings, ProgressCallback progressCallback) {
-        ModelGenerator modelGenerator = new ModelGenerator();
-        initializeAbstractGenerator(modelGenerator, warnings,
-                progressCallback);
-        generators.add(modelGenerator);
         BuiltInGeneratorConfiguration builtInGeneratorConfiguration = context.getBuiltInGeneratorConfiguration();
+        if(builtInGeneratorConfiguration.isEnableModel()) {
+            ModelGenerator modelGenerator = new ModelGenerator();
+            initializeAbstractGenerator(modelGenerator, warnings,
+                    progressCallback);
+            generators.add(modelGenerator);
+        }
         if (builtInGeneratorConfiguration.isEnableDTO()) {
             DTOGenerator dtoGenerator = new DTOGenerator();
             initializeAbstractGenerator(dtoGenerator, warnings, progressCallback);

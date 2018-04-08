@@ -27,6 +27,7 @@ public class BuiltInGeneratorConfiguration extends PropertyHolder {
     private String serviceSuffix = "Service";
     private String dtoSuffix = "DTO";
 
+    private boolean enableModel = true;
     private boolean enableDTO;
     private boolean enableDAO;
     private boolean enableService;
