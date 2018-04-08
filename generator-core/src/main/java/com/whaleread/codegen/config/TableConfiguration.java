@@ -40,68 +40,50 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 public class TableConfiguration extends PropertyHolder {
     @Getter
     @Setter
-    private boolean dtoEnabled;
+    private boolean enableDTO;
 
     @Getter
     @Setter
-    private boolean daoEnabled;
+    private boolean enableDAO;
 
     @Getter
     @Setter
-    private boolean serviceEnabled = true;
+    private boolean enableService;
 
     @Getter
     @Setter
-    private boolean insertStatementEnabled = true;
+    private boolean enableInsert;
 
     @Getter
     @Setter
-    private boolean insertSelectiveStatementEnabled = true;
+    private boolean enableInsertSelective;
 
     @Getter
     @Setter
-    private boolean selectByPrimaryKeyStatementEnabled = true;
+    private boolean enableSelectByPrimaryKey;
 
     @Getter
     @Setter
-    private boolean selectByExampleStatementEnabled;
+    private boolean enableCountByCriteria;
+    @Getter
+    @Setter
+    private boolean enableSelectByCriteria;
 
     @Getter
     @Setter
-    private boolean countByExampleStatementEnabled;
+    private boolean enableUpdateByPrimaryKey;
 
     @Getter
     @Setter
-    private boolean selectByCriteriaStatementEnabled = true;
+    private boolean enableUpdateByPrimaryKeySelective;
 
     @Getter
     @Setter
-    private boolean updateByPrimaryKeyStatementEnabled;
+    private boolean enableDeleteByPrimaryKey;
 
     @Getter
     @Setter
-    private boolean updateByPrimaryKeySelectiveStatementEnabled = true;
-
-    @Getter
-    @Setter
-    private boolean deleteByPrimaryKeyStatementEnabled = true;
-
-    @Getter
-    @Setter
-    private boolean deleteByExampleStatementEnabled;
-
-    @Getter
-    @Setter
-    private boolean deleteByCriteriaStatementEnabled = true;
-
-
-    @Getter
-    @Setter
-    private boolean updateByExampleStatementEnabled;
-
-    @Getter
-    @Setter
-    private boolean updateByCriteriaStatementEnabled = true;
+    private boolean enableDeleteByCriteria;
 
     private List<ColumnOverride> columnOverrides;
 
@@ -238,19 +220,19 @@ public class TableConfiguration extends PropertyHolder {
         return generatedKey;
     }
 
-    public boolean areAnyStatementsEnabled() {
-        return selectByExampleStatementEnabled
-                || selectByPrimaryKeyStatementEnabled || insertStatementEnabled
-                || updateByPrimaryKeyStatementEnabled
-                || deleteByExampleStatementEnabled
-                || deleteByPrimaryKeyStatementEnabled
-                || countByExampleStatementEnabled
-                || updateByExampleStatementEnabled
-                || updateByCriteriaStatementEnabled
-                || deleteByCriteriaStatementEnabled
-                || insertSelectiveStatementEnabled
-                || updateByPrimaryKeySelectiveStatementEnabled;
-    }
+//    public boolean areAnyStatementsEnabled() {
+//        return selectByExampleStatementEnabled
+//                || enableSelectByPrimaryKey || enableInsert
+//                || enableUpdateByPrimaryKey
+//                || deleteByExampleStatementEnabled
+//                || enableDeleteByPrimaryKey
+//                || countByExampleStatementEnabled
+//                || updateByExampleStatementEnabled
+//                || updateByCriteriaStatementEnabled
+//                || enableDeleteByCriteria
+//                || enableInsertSelective
+//                || enableUpdateByPrimaryKeySelective;
+//    }
 
     public void setGeneratedKey(GeneratedKey generatedKey) {
         this.generatedKey = generatedKey;
@@ -342,44 +324,44 @@ public class TableConfiguration extends PropertyHolder {
                     "javaTypeName", javaTypeName)); //$NON-NLS-1$
         }
 
-        if (!insertStatementEnabled) {
-            xmlElement.addAttribute(new Attribute("enableInsert", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+//        if (!enableInsert) {
+//            xmlElement.addAttribute(new Attribute("enableInsert", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
+//
+//        if (!enableSelectByPrimaryKey) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableSelectByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
 
-        if (!selectByPrimaryKeyStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableSelectByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+//        if (!selectByExampleStatementEnabled) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableSelectByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
 
-        if (!selectByExampleStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableSelectByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+//        if (!enableUpdateByPrimaryKey) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableUpdateByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
+//
+//        if (!enableDeleteByPrimaryKey) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableDeleteByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
 
-        if (!updateByPrimaryKeyStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableUpdateByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        if (!deleteByPrimaryKeyStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableDeleteByPrimaryKey", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        if (!deleteByExampleStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableDeleteByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        if (!countByExampleStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableCountByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        if (!updateByExampleStatementEnabled) {
-            xmlElement.addAttribute(new Attribute(
-                    "enableUpdateByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+//        if (!deleteByExampleStatementEnabled) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableDeleteByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
+//
+//        if (!countByExampleStatementEnabled) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableCountByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
+//
+//        if (!updateByExampleStatementEnabled) {
+//            xmlElement.addAttribute(new Attribute(
+//                    "enableUpdateByExample", "false")); //$NON-NLS-1$ //$NON-NLS-2$
+//        }
 
 //        if (stringHasValue(selectByPrimaryKeyQueryId)) {
 //            xmlElement.addAttribute(new Attribute(
@@ -470,7 +452,7 @@ public class TableConfiguration extends PropertyHolder {
 //        // should be set
 //        if (isTrue(getProperty(PropertyRegistry.TABLE_USE_COLUMN_INDEXES))
 //                && selectByExampleStatementEnabled
-//                && selectByPrimaryKeyStatementEnabled) {
+//                && enableSelectByPrimaryKey) {
 //            boolean queryId1Set = stringHasValue(selectByExampleQueryId);
 //            boolean queryId2Set = stringHasValue(selectByPrimaryKeyQueryId);
 //

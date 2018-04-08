@@ -5,7 +5,7 @@ import com.whaleread.codegen.api.IntrospectedTable;
 import com.whaleread.codegen.api.ProgressCallback;
 import com.whaleread.codegen.config.BuiltInGeneratorConfiguration;
 import com.whaleread.codegen.generator.AbstractGenerator;
-import com.whaleread.codegen.generator.builtin.DtoGenerator;
+import com.whaleread.codegen.generator.builtin.DTOGenerator;
 import com.whaleread.codegen.generator.builtin.JdbcTemplateJavaClientGenerator;
 import com.whaleread.codegen.generator.builtin.ModelGenerator;
 import com.whaleread.codegen.generator.builtin.SpringCrudServiceGenerator;
@@ -31,17 +31,17 @@ public class IntrospectedTableWhaleImpl extends IntrospectedTable {
                 progressCallback);
         generators.add(modelGenerator);
         BuiltInGeneratorConfiguration builtInGeneratorConfiguration = context.getBuiltInGeneratorConfiguration();
-        if (builtInGeneratorConfiguration.isDtoEnabled()) {
-            DtoGenerator dtoGenerator = new DtoGenerator();
+        if (builtInGeneratorConfiguration.isEnableDTO()) {
+            DTOGenerator dtoGenerator = new DTOGenerator();
             initializeAbstractGenerator(dtoGenerator, warnings, progressCallback);
             generators.add(dtoGenerator);
         }
-        if (builtInGeneratorConfiguration.isDaoEnabled()) {
+        if (builtInGeneratorConfiguration.isEnableDAO()) {
             JdbcTemplateJavaClientGenerator jdbcTemplateJavaClientGenerator = new JdbcTemplateJavaClientGenerator();
             initializeAbstractGenerator(jdbcTemplateJavaClientGenerator, warnings, progressCallback);
             generators.add(jdbcTemplateJavaClientGenerator);
         }
-        if (builtInGeneratorConfiguration.isServiceEnabled()) {
+        if (builtInGeneratorConfiguration.isEnableService()) {
             SpringCrudServiceGenerator serviceGenerator = new SpringCrudServiceGenerator();
             initializeAbstractGenerator(serviceGenerator, warnings, progressCallback);
             generators.add(serviceGenerator);

@@ -24,8 +24,8 @@
         <builtInGenerator targetPackage="com.whaleread.codegen.sample" targetProject="MAVEN">
             <property name="enableSubPackages" value="true" />
             <property name="trimStrings" value="true" />
-            <property name="dtoEnabled" value="true"/>
-            <property name="daoEnabled" value="true"/>
+            <property name="enableDTO" value="true"/>
+            <property name="enableDAO" value="true"/>
         </builtInGenerator>
 
         <table tableName="foo" catalog="novel_admin" alias="f"/>

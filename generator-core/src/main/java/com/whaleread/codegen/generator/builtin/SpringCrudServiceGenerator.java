@@ -3,6 +3,7 @@ package com.whaleread.codegen.generator.builtin;
 import com.whaleread.codegen.api.CommentGenerator;
 import com.whaleread.codegen.api.IntrospectedColumn;
 import com.whaleread.codegen.api.dom.java.*;
+import com.whaleread.codegen.config.TableConfiguration;
 import com.whaleread.codegen.generator.AbstractJavaGenerator;
 import com.whaleread.codegen.runtime.jdbc.Criteria;
 
@@ -17,7 +18,7 @@ import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
-        if (!introspectedTable.getTableConfiguration().isServiceEnabled()) {
+        if (!introspectedTable.getTableConfiguration().isEnableService()) {
             return Collections.emptyList();
         }
 
@@ -44,12 +45,25 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
 
         topLevelClass.addImportedType("org.springframework.transaction.annotation.Transactional");
 
-        addFindByIdMethod(topLevelClass);
-        addCountByCriteriaMethod(topLevelClass);
-        addFindByCriteriaMethod(topLevelClass);
-        addSaveMethod(topLevelClass);
-        addUpdateMethod(topLevelClass);
-        addDeleteByIdMethod(topLevelClass);
+        TableConfiguration tc = introspectedTable.getTableConfiguration();
+        if (tc.isEnableSelectByPrimaryKey()) {
+            addFindByIdMethod(topLevelClass);
+        }
+        if (tc.isEnableCountByCriteria()) {
+            addCountByCriteriaMethod(topLevelClass);
+        }
+        if (tc.isEnableSelectByCriteria()) {
+            addFindByCriteriaMethod(topLevelClass);
+        }
+        if (tc.isEnableInsertSelective()) {
+            addSaveMethod(topLevelClass);
+        }
+        if (tc.isEnableUpdateByPrimaryKeySelective()) {
+            addUpdateMethod(topLevelClass);
+        }
+        if (tc.isEnableDeleteByPrimaryKey()) {
+            addDeleteByIdMethod(topLevelClass);
+        }
         return Collections.singletonList(topLevelClass);
     }
 
@@ -69,12 +83,12 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
             repositoryParams.append(column.getJavaProperty());
         }
         FullyQualifiedJavaType recordType;
-        if (context.getBuiltInGeneratorConfiguration().isDtoEnabled()) {
+        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
             recordType = new FullyQualifiedJavaType(introspectedTable.getDtoType());
         } else {
             recordType = new FullyQualifiedJavaType(introspectedTable.getModelType());
         }
-        if(context.getBuiltInGeneratorConfiguration().isNonNullEnabled()) {
+        if (context.getBuiltInGeneratorConfiguration().isEnableNonNull()) {
             topLevelClass.addImportedType("java.util.Optional");
             FullyQualifiedJavaType optionalType = new FullyQualifiedJavaType("java.util.Optional");
             optionalType.addTypeArgument(recordType);
@@ -113,7 +127,7 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(List.class.getName());
         FullyQualifiedJavaType returnTypeArgument;
-        if (context.getBuiltInGeneratorConfiguration().isDtoEnabled()) {
+        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
             returnTypeArgument = new FullyQualifiedJavaType(introspectedTable.getDtoType());
         } else {
             returnTypeArgument = new FullyQualifiedJavaType(introspectedTable.getModelType());

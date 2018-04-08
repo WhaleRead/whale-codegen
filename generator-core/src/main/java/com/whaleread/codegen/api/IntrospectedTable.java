@@ -593,15 +593,5 @@ public abstract class IntrospectedTable {
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append(config.getServiceSuffix());
         internalAttributes.put(InternalAttribute.ATTR_SERVICE_TYPE, sb.toString());
-
-        sb.setLength(0);
-        sb.append(config.getTargetPackage());
-        sb.append(fullyQualifiedTable.getSubPackage(isSubPackagesEnabled(config)));
-        sb.append('.');
-        sb.append(config.getControllerSubPackage());
-        sb.append('.');
-        sb.append(fullyQualifiedTable.getDomainObjectName());
-        sb.append(config.getControllerSuffix());
-        internalAttributes.put(InternalAttribute.ATTR_CONTROLLER_TYPE, sb.toString());
     }
 }

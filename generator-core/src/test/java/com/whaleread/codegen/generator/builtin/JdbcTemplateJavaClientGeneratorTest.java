@@ -38,7 +38,7 @@ public class JdbcTemplateJavaClientGeneratorTest {
         IntrospectedTable introspectedTable = new IntrospectedTableWhaleImpl();
         introspectedTable.setContext(context);
         TableConfiguration tc = new TableConfiguration(context);
-        tc.setDtoEnabled(true);
+        tc.setEnableDTO(true);
         introspectedTable.setTableConfiguration(tc);
         introspectedTable.setRemarks("测试表");
         FullyQualifiedTable fullyQualifiedTable = new FullyQualifiedTable("novel", null, "foo", null, "f", true, null, null, null, false, null, context);

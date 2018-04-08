@@ -55,10 +55,35 @@ public class PropertyRegistry {
     public static final String CONTEXT_JAVA_FORMATTER = "javaFormatter"; //$NON-NLS-1$
     public static final String CONTEXT_XML_FORMATTER = "xmlFormatter"; //$NON-NLS-1$
 
-    public static final String CLIENT_USE_LEGACY_BUILDER = "useLegacyBuilder"; //$NON-NLS-1$
+//    public static final String CLIENT_USE_LEGACY_BUILDER = "useLegacyBuilder"; //$NON-NLS-1$
     
-    public static final String DAO_EXAMPLE_METHOD_VISIBILITY = "exampleMethodVisibility"; //$NON-NLS-1$
-    public static final String DAO_METHOD_NAME_CALCULATOR = "methodNameCalculator"; //$NON-NLS-1$
+//    public static final String DAO_EXAMPLE_METHOD_VISIBILITY = "exampleMethodVisibility"; //$NON-NLS-1$
+//    public static final String DAO_METHOD_NAME_CALCULATOR = "methodNameCalculator"; //$NON-NLS-1$
+    public static final String DAO_ENABLE_INSERT = "enableInsert";
+    public static final String DAO_ENABLE_INSERT_SELECTIVE = "enableInsertSelective";
+    public static final String DAO_ENABLE_SELECT_BY_PRIMARY_KEY = "enableSelectByPrimaryKey";
+    public static final String DAO_ENABLE_COUNT_BY_CRITERIA = "enableCountByCriteria";
+    public static final String DAO_ENABLE_SELECT_BY_CRITERIA = "enableSelectByCriteria";
+    public static final String DAO_ENABLE_UPDATE_BY_PRIMARY_KEY = "enableUpdateByPrimaryKey";
+    public static final String DAO_ENABLE_UPDATE_BY_PRIMARY_KEY_SELECTIVE = "enableUpdateByPrimaryKeySelective";
+    public static final String DAO_ENABLE_DELETE_BY_PRIMARY_KEY = "enableDeleteByPrimaryKey";
+    public static final String DAO_ENABLE_DELETE_BY_CRITERIA = "enableDeleteByCriteria";
+
+    public static final String BUILT_IN_TARGET_PACKAGE = "targetPackage";
+    public static final String BUILT_IN_TARGET_PROJECT = "targetProject";
+    public static final String BUILT_IN_MODEL_SUBPACKAGE = "modelSubPackage";
+    public static final String BUILT_IN_DTO_SUBPACKAGE = "dtoSubPackage";
+    public static final String BUILT_IN_DAO_SUBPACKAGE = "daoSubPackage";
+    public static final String BUILT_IN_DTO_SUFFIX = "dtoSuffix";
+    public static final String BUILT_IN_DAO_SUFFIX = "daoSuffix";
+    public static final String BUILT_IN_SERVICE_SUFFIX = "serviceSuffix";
+
+    public static final String BUILT_IN_SERVICE_SUBPACKAGE = "serviceSubPackage";
+    public static final String BUILT_IN_ENABLE_DTO = "enableDTO";
+    public static final String BUILT_IN_ENABLE_DAO = "enableDAO";
+    public static final String BUILT_IN_ENABLE_SERVICE = "enableService";
+    public static final String BUILT_IN_ENABLE_DAO_METHODS = "enableDAOMethods";
+    public static final String BUILT_IN_ENABLE_NON_NULL = "enableNonNull";
 
     public static final String TYPE_RESOLVER_FORCE_BIG_DECIMALS = "forceBigDecimals"; //$NON-NLS-1$
     public static final String TYPE_RESOLVER_FORCE_INT = "forceInt";

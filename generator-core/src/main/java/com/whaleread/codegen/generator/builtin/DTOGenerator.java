@@ -9,6 +9,7 @@ import com.whaleread.codegen.api.dom.java.TopLevelClass;
 import com.whaleread.codegen.generator.AbstractJavaGenerator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
@@ -16,9 +17,12 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 /**
  * Created by Dolphin on 2018/1/18
  */
-public class DtoGenerator extends AbstractJavaGenerator {
+public class DTOGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
+        if (!introspectedTable.getTableConfiguration().isEnableDTO()) {
+            return Collections.emptyList();
+        }
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(getString(
                 "Progress.6", table.toString())); //$NON-NLS-1$

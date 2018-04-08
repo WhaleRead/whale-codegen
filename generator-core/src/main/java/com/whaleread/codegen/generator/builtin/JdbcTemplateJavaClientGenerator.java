@@ -7,7 +7,6 @@ import com.whaleread.codegen.api.Plugin;
 import com.whaleread.codegen.api.dom.java.*;
 import com.whaleread.codegen.config.TableConfiguration;
 import com.whaleread.codegen.generator.AbstractJavaGenerator;
-import com.whaleread.codegen.internal.util.StringUtility;
 import com.whaleread.codegen.runtime.jdbc.Criteria;
 import com.whaleread.codegen.runtime.jdbc.spring.AliasBeanPropertyRowMapper;
 
@@ -18,9 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.whaleread.codegen.internal.util.JavaBeansUtil.getGetterMethodName;
-import static com.whaleread.codegen.internal.util.JavaBeansUtil.getSetterMethodName;
-import static com.whaleread.codegen.internal.util.JavaBeansUtil.privateStaticFinal;
+import static com.whaleread.codegen.internal.util.JavaBeansUtil.*;
 import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 
@@ -32,7 +29,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
-        if (!introspectedTable.getTableConfiguration().isDaoEnabled()) {
+        if (!introspectedTable.getTableConfiguration().isEnableDAO()) {
             return Collections.emptyList();
         }
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
@@ -59,35 +56,38 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
 
         TableConfiguration tableConfig = introspectedTable.getTableConfiguration();
 
-        if (tableConfig.isDtoEnabled()) {
+        if (tableConfig.isEnableDTO()) {
             topLevelClass.addImportedType(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
         }
 
         addRowMapperField(topLevelClass);
         addInjectMethod(topLevelClass);
 
-        if (tableConfig.isSelectByPrimaryKeyStatementEnabled()) {
+        if (tableConfig.isEnableSelectByPrimaryKey()) {
             addSelectByPrimaryKeyMethod(topLevelClass);
         }
-        if (tableConfig.isSelectByCriteriaStatementEnabled()) {
+        if (tableConfig.isEnableCountByCriteria()) {
+            addCountByCriteriaMethod(topLevelClass);
+        }
+        if (tableConfig.isEnableSelectByCriteria()) {
             addSelectByCriteriaMethod(topLevelClass);
         }
 
-        if (tableConfig.isInsertStatementEnabled()) {
+        if (tableConfig.isEnableInsert()) {
             addInsertMethod(topLevelClass);
         }
-        if (tableConfig.isInsertSelectiveStatementEnabled()) {
+        if (tableConfig.isEnableInsertSelective()) {
             addInsertSelectiveMethod(topLevelClass);
         }
 
-        if (tableConfig.isUpdateByPrimaryKeyStatementEnabled()) {
+        if (tableConfig.isEnableUpdateByPrimaryKey()) {
             addUpdateByPrimaryKeySelectiveMethod(topLevelClass);
         }
 
-        if (tableConfig.isDeleteByPrimaryKeyStatementEnabled()) {
+        if (tableConfig.isEnableDeleteByPrimaryKey()) {
             addDeleteByPrimaryKeyMethod(topLevelClass);
         }
-        if (tableConfig.isDeleteByCriteriaStatementEnabled()) {
+        if (tableConfig.isEnableDeleteByCriteria()) {
             addDeleteByCriteriaMethod(topLevelClass);
         }
 
@@ -97,7 +97,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
     private void addRowMapperField(TopLevelClass topLevelClass) {
         FullyQualifiedJavaType rowMapperType = new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME);
         String paramTypeName;
-        if (introspectedTable.getTableConfiguration().isDtoEnabled()) {
+        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
             paramTypeName = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "DTO";
             rowMapperType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
         } else {
@@ -155,14 +155,14 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         whereFragment.setLength(whereFragment.length() - 4);
         valueFragment.setLength(valueFragment.length() - 2);
         String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-        boolean nonNullEnabled = context.getBuiltInGeneratorConfiguration().isNonNullEnabled();
+        boolean nonNullEnabled = context.getBuiltInGeneratorConfiguration().isEnableNonNull();
         FullyQualifiedJavaType returnType;
-        if (introspectedTable.getTableConfiguration().isDtoEnabled()) {
+        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
             returnType = new FullyQualifiedJavaType(introspectedTable.getDtoType());
         } else {
             returnType = new FullyQualifiedJavaType(introspectedTable.getModelType());
         }
-        if(nonNullEnabled) {
+        if (nonNullEnabled) {
             topLevelClass.addImportedType("java.util.Optional");
             FullyQualifiedJavaType optionalType = new FullyQualifiedJavaType("java.util.Optional");
             optionalType.addTypeArgument(returnType);
@@ -328,7 +328,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         topLevelClass.addMethod(method);
     }
 
-    private void addSelectByCriteriaMethod(TopLevelClass topLevelClass) {
+    private void addCountByCriteriaMethod(TopLevelClass topLevelClass) {
         topLevelClass.addImportedType(Map.class.getName());
         topLevelClass.addImportedType(HashMap.class.getName());
         String objectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
@@ -344,16 +344,24 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         topLevelClass.addImportedType(criteriaType);
         topLevelClass.addMethod(method);
+    }
 
-        method = new Method("selectByCriteria");
+    private void addSelectByCriteriaMethod(TopLevelClass topLevelClass) {
+        topLevelClass.addImportedType(Map.class.getName());
+        topLevelClass.addImportedType(HashMap.class.getName());
+        String objectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        Method method = new Method("selectByCriteria");
         method.setVisibility(JavaVisibility.PUBLIC);
+        String alias = introspectedTable.getFullyQualifiedTable().getAlias();
+        boolean hasAlias = stringHasValue(alias);
+        FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
         method.addParameter(new Parameter(criteriaType, "criteria"));
         method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "offset"));
         method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "count"));
         method.addBodyLine("Map<String, Object> params = criteria.toSql();");
         method.addBodyLine("return getNamedParameterJdbcTemplate().query(\"SELECT \" + " + objectName + (hasAlias ? ".ALIASED_BASE_COLUMNS" : ".BASE_COLUMNS") + " + \" FROM \" + " + objectName + ".TABLE_NAME + \" " + (hasAlias ? alias : "") + " \" + criteria.getWhereClause() + criteria.getOrderByClause() + \" LIMIT \" + offset + ',' + count, params, rowMapper);");
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(List.class.getName());
-        if (introspectedTable.getTableConfiguration().isDtoEnabled()) {
+        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
             returnType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
         } else {
             returnType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getModelType()));

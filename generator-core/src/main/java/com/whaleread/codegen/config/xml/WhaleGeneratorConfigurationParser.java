@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
+import static com.whaleread.codegen.config.PropertyRegistry.*;
 import static com.whaleread.codegen.internal.util.StringUtility.*;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 
@@ -274,89 +275,55 @@ public class WhaleGeneratorConfigurationParser {
                 parseColumnRenamingRule(tc, childNode);
             }
         }
-        tc.setDtoEnabled(context.getBuiltInGeneratorConfiguration().isDtoEnabled() && !isFalse(tc.getProperty("dtoEnabled")));
-        tc.setDaoEnabled(context.getBuiltInGeneratorConfiguration().isDaoEnabled() && !isFalse(tc.getProperty("daoEnabled")));
-        tc.setServiceEnabled(context.getBuiltInGeneratorConfiguration().isServiceEnabled() && !isFalse(tc.getProperty("serviceEnabled")));
+        tc.setEnableDTO(context.getBuiltInGeneratorConfiguration().isEnableDTO() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_DTO)));
+        tc.setEnableDAO(context.getBuiltInGeneratorConfiguration().isEnableDAO() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_DAO)));
+        tc.setEnableService(context.getBuiltInGeneratorConfiguration().isEnableService() && !isFalse(tc.getProperty(BUILT_IN_ENABLE_SERVICE)));
 
-        String enableInsert = tc.getProperty("enableInsert"); //$NON-NLS-1$
+        boolean enableDAOMethods = context.getBuiltInGeneratorConfiguration().isEnableDAOMethods();
+
+        String enableInsert = tc.getProperty(DAO_ENABLE_INSERT);
         if (stringHasValue(enableInsert)) {
-            tc.setInsertStatementEnabled(isTrue(enableInsert));
+            tc.setEnableInsert(enableDAOMethods ? !isFalse(enableInsert) : isTrue(enableInsert));
         }
 
-        String enableSelectByPrimaryKey = tc
-                .getProperty("enableSelectByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableSelectByPrimaryKey)) {
-            tc.setSelectByPrimaryKeyStatementEnabled(
-                    isTrue(enableSelectByPrimaryKey));
-        }
-
-        String enableSelectByExample = tc
-                .getProperty("enableSelectByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableSelectByExample)) {
-            tc.setSelectByExampleStatementEnabled(
-                    isTrue(enableSelectByExample));
-        }
-
-        String enableUpdateByPrimaryKey = tc
-                .getProperty("enableUpdateByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByPrimaryKey)) {
-            tc.setUpdateByPrimaryKeyStatementEnabled(
-                    isTrue(enableUpdateByPrimaryKey));
-        }
-
-        String enableUpdateByPrimaryKeySelective = tc
-                .getProperty("enableUpdateByPrimaryKeySelective"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByPrimaryKeySelective)) {
-            tc.setUpdateByPrimaryKeySelectiveStatementEnabled(
-                    isTrue(enableUpdateByPrimaryKeySelective));
-        }
-
-        String enableDeleteByPrimaryKey = tc
-                .getProperty("enableDeleteByPrimaryKey"); //$NON-NLS-1$
-        if (stringHasValue(enableDeleteByPrimaryKey)) {
-            tc.setDeleteByPrimaryKeyStatementEnabled(
-                    isTrue(enableDeleteByPrimaryKey));
-        }
-
-        String enableDeleteByExample = tc
-                .getProperty("enableDeleteByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableDeleteByExample)) {
-            tc.setDeleteByExampleStatementEnabled(
-                    isTrue(enableDeleteByExample));
-        }
-
-        String enableCountByExample = tc
-                .getProperty("enableCountByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableCountByExample)) {
-            tc.setCountByExampleStatementEnabled(
-                    isTrue(enableCountByExample));
-        }
-
-        String enableUpdateByExample = tc
-                .getProperty("enableUpdateByExample"); //$NON-NLS-1$
-        if (stringHasValue(enableUpdateByExample)) {
-            tc.setUpdateByExampleStatementEnabled(
-                    isTrue(enableUpdateByExample));
-        }
-
-        String enableSelectByCriteria = tc.getProperty("enableSelectByCriteria");
-        if (stringHasValue(enableSelectByCriteria)) {
-            tc.setSelectByCriteriaStatementEnabled(isTrue(enableSelectByCriteria));
-        }
-
-        String enableDeleteByCriteria = tc.getProperty("enableDeleteByCriteria");
-        if (stringHasValue(enableDeleteByCriteria)) {
-            tc.setDeleteByCriteriaStatementEnabled(isTrue(enableDeleteByCriteria));
-        }
-
-        String enableUpdateByCriteria = tc.getProperty("enableUpdateByCriteria");
-        if (stringHasValue(enableUpdateByCriteria)) {
-            tc.setUpdateByCriteriaStatementEnabled(isTrue(enableUpdateByCriteria));
-        }
-
-        String enableInsertSelective = tc.getProperty("enableInsertSelective");
+        String enableInsertSelective = tc.getProperty(DAO_ENABLE_INSERT_SELECTIVE);
         if (stringHasValue(enableInsertSelective)) {
-            tc.setInsertSelectiveStatementEnabled(isTrue(enableInsertSelective));
+            tc.setEnableInsertSelective(enableDAOMethods ? !isFalse(enableInsertSelective) : isTrue(enableInsertSelective));
+        }
+
+        String enableSelectByPrimaryKey = tc.getProperty(DAO_ENABLE_SELECT_BY_PRIMARY_KEY);
+        if (stringHasValue(enableSelectByPrimaryKey)) {
+            tc.setEnableSelectByPrimaryKey(enableDAOMethods ? !isFalse(enableSelectByPrimaryKey) : isTrue(enableSelectByPrimaryKey));
+        }
+
+        String enableCountByCriteria = tc.getProperty(DAO_ENABLE_COUNT_BY_CRITERIA);
+        if (stringHasValue(enableCountByCriteria)) {
+            tc.setEnableCountByCriteria(enableDAOMethods ? !isFalse(enableCountByCriteria) : isTrue(enableCountByCriteria));
+        }
+
+        String enableSelectByCriteria = tc.getProperty(DAO_ENABLE_SELECT_BY_CRITERIA);
+        if (stringHasValue(enableSelectByCriteria)) {
+            tc.setEnableSelectByCriteria(enableDAOMethods ? !isFalse(enableSelectByCriteria) : isTrue(enableSelectByCriteria));
+        }
+
+        String enableUpdateByPrimaryKey = tc.getProperty(DAO_ENABLE_UPDATE_BY_PRIMARY_KEY);
+        if (stringHasValue(enableUpdateByPrimaryKey)) {
+            tc.setEnableUpdateByPrimaryKey(enableDAOMethods ? !isFalse(enableUpdateByPrimaryKey) : isTrue(enableUpdateByPrimaryKey));
+        }
+
+        String enableUpdateByPrimaryKeySelective = tc.getProperty(DAO_ENABLE_UPDATE_BY_PRIMARY_KEY_SELECTIVE);
+        if (stringHasValue(enableUpdateByPrimaryKeySelective)) {
+            tc.setEnableUpdateByPrimaryKeySelective(enableDAOMethods ? !isFalse(enableUpdateByPrimaryKeySelective) : isTrue(enableUpdateByPrimaryKeySelective));
+        }
+
+        String enableDeleteByPrimaryKey = tc.getProperty(DAO_ENABLE_DELETE_BY_PRIMARY_KEY);
+        if (stringHasValue(enableDeleteByPrimaryKey)) {
+            tc.setEnableDeleteByPrimaryKey(enableDAOMethods ? !isFalse(enableDeleteByPrimaryKey) : isTrue(enableDeleteByPrimaryKey));
+        }
+
+        String enableDeleteByCriteria = tc.getProperty(DAO_ENABLE_DELETE_BY_CRITERIA);
+        if (stringHasValue(enableDeleteByCriteria)) {
+            tc.setEnableDeleteByCriteria(enableDAOMethods ? !isFalse(enableDeleteByCriteria) : isTrue(enableDeleteByCriteria));
         }
     }
 
@@ -582,21 +549,26 @@ public class WhaleGeneratorConfigurationParser {
             }
         }
 
-        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
-        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty(BUILT_IN_TARGET_PACKAGE); //$NON-NLS-1$
+        String targetProject = attributes.getProperty(BUILT_IN_TARGET_PROJECT); //$NON-NLS-1$
 
-        String modelSubPackage = configuration.getProperty("modelSubPackage");
-        String dtoSubPackage = configuration.getProperty("dtoSubPackage");
-        String daoSubPackage = configuration.getProperty("daoSubPackage");
-        String serviceSubPackage = configuration.getProperty("serviceSubPackage");
-        String controllerSubPackage = configuration.getProperty("controllerSubPackage");
+        String modelSubPackage = configuration.getProperty(BUILT_IN_MODEL_SUBPACKAGE);
+        String dtoSubPackage = configuration.getProperty(BUILT_IN_DTO_SUBPACKAGE);
+        String daoSubPackage = configuration.getProperty(BUILT_IN_DAO_SUBPACKAGE);
+        String serviceSubPackage = configuration.getProperty(BUILT_IN_SERVICE_SUBPACKAGE);
+//        String controllerSubPackage = configuration.getProperty("controllerSubPackage");
 
-        String dtoEnabled = configuration.getProperty("dtoEnabled");
-        String daoEnabled = configuration.getProperty("daoEnabled");
-        String serviceEnabled = configuration.getProperty("serviceEnabled");
-        String controllerEnabled = configuration.getProperty("controllerEnabled");
+        String dtoSuffix = configuration.getProperty(BUILT_IN_DTO_SUFFIX);
+        String daoSuffix = configuration.getProperty(BUILT_IN_DAO_SUFFIX);
+        String serviceSuffix = configuration.getProperty(BUILT_IN_SERVICE_SUFFIX);
 
-        String nonNullEnabled = configuration.getProperty("nonNullEnabled");
+        String enableDTO = configuration.getProperty(BUILT_IN_ENABLE_DTO);
+        String enableDAO = configuration.getProperty(BUILT_IN_ENABLE_DAO);
+        String enableService = configuration.getProperty(BUILT_IN_ENABLE_SERVICE);
+        String enableDAOMethods = configuration.getProperty(BUILT_IN_ENABLE_DAO_METHODS);
+//        String controllerEnabled = configuration.getProperty("enableController");
+
+        String enableNonNull = configuration.getProperty(BUILT_IN_ENABLE_NON_NULL);
 
         configuration.setTargetPackage(targetPackage);
         configuration.setTargetProject(targetProject);
@@ -613,24 +585,37 @@ public class WhaleGeneratorConfigurationParser {
         if (stringHasValue(serviceSubPackage)) {
             configuration.setServiceSubPackage(serviceSubPackage);
         }
-        if (stringHasValue(controllerSubPackage)) {
-            configuration.setControllerSubPackage(controllerSubPackage);
+//        if (stringHasValue(controllerSubPackage)) {
+//            configuration.setControllerSubPackage(controllerSubPackage);
+//        }
+
+        if (stringHasValue(dtoSuffix)) {
+            configuration.setDtoSuffix(dtoSuffix);
+        }
+        if (stringHasValue(daoSuffix)) {
+            configuration.setDaoSuffix(daoSuffix);
+        }
+        if (stringHasValue(serviceSuffix)) {
+            configuration.setServiceSuffix(serviceSuffix);
         }
 
-        if (stringHasValue(dtoEnabled)) {
-            configuration.setDtoEnabled(Boolean.parseBoolean(dtoEnabled));
+        if (stringHasValue(enableDTO)) {
+            configuration.setEnableDTO(Boolean.parseBoolean(enableDTO));
         }
-        if (stringHasValue(daoEnabled)) {
-            configuration.setDaoEnabled(Boolean.parseBoolean(daoEnabled));
+        if (stringHasValue(enableDAO)) {
+            configuration.setEnableDAO(Boolean.parseBoolean(enableDAO));
         }
-        if (stringHasValue(serviceEnabled)) {
-            configuration.setServiceEnabled(Boolean.parseBoolean(serviceEnabled));
+        if (stringHasValue(enableDAOMethods)) {
+            configuration.setEnableDAOMethods(Boolean.parseBoolean(enableDAOMethods));
         }
-        if (stringHasValue(controllerEnabled)) {
-            configuration.setControllerEnabled(Boolean.parseBoolean(controllerEnabled));
+        if (stringHasValue(enableService)) {
+            configuration.setEnableService(Boolean.parseBoolean(enableService));
         }
+//        if (stringHasValue(controllerEnabled)) {
+//            configuration.setEnableController(Boolean.parseBoolean(controllerEnabled));
+//        }
 
-        configuration.setNonNullEnabled(!isFalse(nonNullEnabled));
+        configuration.setEnableNonNull(!isFalse(enableNonNull));
     }
 
     protected void parseJdbcConnection(Context context, Node node) {

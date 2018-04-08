@@ -21,29 +21,26 @@ public class BuiltInGeneratorConfiguration extends PropertyHolder {
     private String modelSubPackage = "model";
     private String daoSubPackage = "repository";
     private String serviceSubPackage = "service";
-    private String controllerSubPackage = "web";
     private String dtoSubPackage = "dto";
 
     private String daoSuffix = "Repository";
     private String serviceSuffix = "Service";
-    private String controllerSuffix = "Controller";
     private String dtoSuffix = "DTO";
 
-    private boolean dtoEnabled;
-    private boolean daoEnabled;
-    private boolean serviceEnabled;
-    private boolean controllerEnabled;
+    private boolean enableDTO;
+    private boolean enableDAO;
+    private boolean enableService;
+    private boolean enableDAOMethods;
 
     /**
      * Use Optional wrap return value where may be null
      */
-    private boolean nonNullEnabled;
+    private boolean enableNonNull;
 
     public void validate(List<String> errors, String contextId) {
         if (!stringHasValue(targetProject)) {
             errors.add(getString("ValidationError.2", contextId)); //$NON-NLS-1$
         }
-
         if (!stringHasValue(targetPackage)) {
             errors.add(getString("ValidationError.12", //$NON-NLS-1$
                     "javaClientGenerator", contextId)); //$NON-NLS-1$
