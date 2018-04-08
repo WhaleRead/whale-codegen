@@ -57,8 +57,10 @@
 
         <!--
           The connectionFactory element is used to describe the connection factory used
-          for connecting to the database for introspection.  Either connectionFacoty
+          for connecting to the database for introspection.  Either connectionFactory
           or jdbcConnection must be specified, but not both.
+          ConnectionFactory with type=DDL must provide parser(ie: com.whaleread.codegen.api.ddl.parser.MySqlDdlParser)
+          and path(path to ddl file) properties, a default catalog with property name "catalog" can  also be provided.
         -->
         <!ELEMENT connectionFactory (property*)>
         <!ATTLIST connectionFactory
@@ -104,6 +106,19 @@
         <!--
           The builtInGenerator element is used to define properties of the BuiltIn Generator.
           The BuiltIn Generator builds builtin classes such as record classes, dto classes, dao classes, service classes etc..
+          enableDTO: whether generate DTOs, default false;
+          enableDAO: whether generate Spring JDBC repositories, default false;
+          enableService: whether generate Spring CRUD services, default false;
+          enableDAOMethods: whether generate DAO methods, default true, this only takes effect when enableDAO is turned on;
+          dtoSuffix: default "DTO";
+          daoSuffix: default "Repository";
+          serviceSuffix: default "Service";
+          modelSubPackage: default "model";
+          dtoSubPackage: default "dto";
+          daoSubPackage: default "repository";
+          serviceSubPackage: default "service";
+          targetProject: path to the project, use "MAVEN" when using MAVEN plugin to point to current project;
+          targetPackage: base package name;
         -->
         <!ELEMENT builtInGenerator (property*)>
         <!ATTLIST builtInGenerator
@@ -123,6 +138,9 @@
         <!--
           The table element is used to specify a database table that will be the source information
           for a set of generated objects.
+          enableDTO: whether generate DTOs, default false;
+          enableDAO: whether generate Spring JDBC repositories, default false;
+          enableService: whether generate Spring CRUD services, default false;
         -->
         <!ELEMENT table (property*, domainObjectRenamingRule?, columnRenamingRule?, (columnOverride | ignoreColumn | ignoreColumnsByRegex)*) >
         <!ATTLIST table

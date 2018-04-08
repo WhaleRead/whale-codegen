@@ -241,15 +241,15 @@ public class WhaleGeneratorConfigurationParser {
             tc.setAllColumnDelimitingEnabled(isTrue(delimitAllColumns));
         }
 
-        String mapperName = attributes.getProperty("mapperName"); //$NON-NLS-1$
-        if (stringHasValue(mapperName)) {
-            tc.setMapperName(mapperName);
-        }
-
-        String sqlProviderName = attributes.getProperty("sqlProviderName"); //$NON-NLS-1$
-        if (stringHasValue(sqlProviderName)) {
-            tc.setSqlProviderName(sqlProviderName);
-        }
+//        String mapperName = attributes.getProperty("mapperName"); //$NON-NLS-1$
+//        if (stringHasValue(mapperName)) {
+//            tc.setMapperName(mapperName);
+//        }
+//
+//        String sqlProviderName = attributes.getProperty("sqlProviderName"); //$NON-NLS-1$
+//        if (stringHasValue(sqlProviderName)) {
+//            tc.setSqlProviderName(sqlProviderName);
+//        }
 
         NodeList nodeList = node.getChildNodes();
         for (int i = 0; i < nodeList.getLength(); i++) {
