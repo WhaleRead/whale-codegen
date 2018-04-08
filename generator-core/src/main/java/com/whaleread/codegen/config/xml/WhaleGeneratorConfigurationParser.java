@@ -134,7 +134,7 @@ public class WhaleGeneratorConfigurationParser {
         }
     }
 
-    private void parseContext(Configuration configuration, Node node) {
+    protected void parseContext(Configuration configuration, Node node) {
 
         Properties attributes = parseAttributes(node);
         String targetRuntime = attributes.getProperty("targetRuntime"); //$NON-NLS-1$
@@ -314,7 +314,7 @@ public class WhaleGeneratorConfigurationParser {
         }
     }
 
-    private void parseColumnOverride(TableConfiguration tc, Node node) {
+    protected void parseColumnOverride(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
         String column = attributes.getProperty("column"); //$NON-NLS-1$
 
@@ -367,7 +367,7 @@ public class WhaleGeneratorConfigurationParser {
         tc.addColumnOverride(co);
     }
 
-    private void parseGeneratedKey(TableConfiguration tc, Node node) {
+    protected void parseGeneratedKey(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
 
         String column = attributes.getProperty("column"); //$NON-NLS-1$
@@ -381,7 +381,7 @@ public class WhaleGeneratorConfigurationParser {
         tc.setGeneratedKey(gk);
     }
 
-    private void parseIgnoreColumn(TableConfiguration tc, Node node) {
+    protected void parseIgnoreColumn(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
         String column = attributes.getProperty("column"); //$NON-NLS-1$
         String delimitedColumnName = attributes
@@ -396,7 +396,7 @@ public class WhaleGeneratorConfigurationParser {
         tc.addIgnoredColumn(ic);
     }
 
-    private void parseIgnoreColumnByRegex(TableConfiguration tc, Node node) {
+    protected void parseIgnoreColumnByRegex(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
         String pattern = attributes.getProperty("pattern"); //$NON-NLS-1$
 
@@ -418,7 +418,7 @@ public class WhaleGeneratorConfigurationParser {
         tc.addIgnoredColumnPattern(icPattern);
     }
 
-    private void parseException(IgnoredColumnPattern icPattern, Node node) {
+    protected void parseException(IgnoredColumnPattern icPattern, Node node) {
         Properties attributes = parseAttributes(node);
         String column = attributes.getProperty("column"); //$NON-NLS-1$
         String delimitedColumnName = attributes
@@ -433,7 +433,7 @@ public class WhaleGeneratorConfigurationParser {
         icPattern.addException(exception);
     }
 
-    private void parseDomainObjectRenamingRule(TableConfiguration tc, Node node) {
+    protected void parseDomainObjectRenamingRule(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
         String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
         String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
@@ -449,7 +449,7 @@ public class WhaleGeneratorConfigurationParser {
         tc.setDomainObjectRenamingRule(dorr);
     }
 
-    private void parseColumnRenamingRule(TableConfiguration tc, Node node) {
+    protected void parseColumnRenamingRule(TableConfiguration tc, Node node) {
         Properties attributes = parseAttributes(node);
         String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
         String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
@@ -491,7 +491,7 @@ public class WhaleGeneratorConfigurationParser {
         }
     }
 
-    private void parsePlugin(Context context, Node node) {
+    protected void parsePlugin(Context context, Node node) {
         PluginConfiguration pluginConfiguration = new PluginConfiguration();
 
         context.addPluginConfiguration(pluginConfiguration);
@@ -597,8 +597,10 @@ public class WhaleGeneratorConfigurationParser {
         if (stringHasValue(enableDAO)) {
             configuration.setEnableDAO(Boolean.parseBoolean(enableDAO));
         }
-        if (stringHasValue(enableDAOMethods)) {
-            configuration.setEnableDAOMethods(configuration.isEnableDAO() && !isFalse(enableDAOMethods));
+        if (configuration.isEnableDAO()) {
+            configuration.setEnableDAOMethods(!isFalse(enableDAOMethods));
+        } else {
+            configuration.setEnableDAOMethods(false);
         }
         if (stringHasValue(enableService)) {
             configuration.setEnableService(Boolean.parseBoolean(enableService));

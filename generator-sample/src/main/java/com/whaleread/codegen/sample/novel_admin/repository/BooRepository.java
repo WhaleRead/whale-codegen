@@ -1,5 +1,6 @@
 package com.whaleread.codegen.sample.novel_admin.repository;
 
+import com.whaleread.codegen.runtime.jdbc.Criteria;
 import com.whaleread.codegen.runtime.jdbc.spring.AliasBeanPropertyRowMapper;
 import com.whaleread.codegen.sample.novel_admin.dto.BooDTO;
 import com.whaleread.codegen.sample.novel_admin.model.Boo;
@@ -28,6 +29,12 @@ public class BooRepository extends NamedParameterJdbcDaoSupport {
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void inject(DataSource dataSource) {
         super.setDataSource(dataSource);
+    }
+
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    public int countByCriteria(Criteria criteria) {
+        Map<String, Object> params = criteria.toSql();
+        return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Boo.TABLE_NAME + " b " + criteria.getWhereClause(), params, int.class);
     }
 
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")

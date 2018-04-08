@@ -122,6 +122,50 @@ public class FooRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    public void updateByPrimaryKeySelective(Foo record) {
+        StringBuilder fragment = new StringBuilder();
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", record.getId());
+        if (record.getName() != null) {
+            fragment.append("`name` = :name, ");
+            params.put("name", record.getName());
+        }
+        if (record.getBirth() != null) {
+            fragment.append("birth = :birth, ");
+            params.put("birth", record.getBirth());
+        }
+        if (record.getAvatar() != null) {
+            fragment.append("avatar = :avatar, ");
+            params.put("avatar", record.getAvatar());
+        }
+        if (record.getEmail() != null) {
+            fragment.append("email = :email, ");
+            params.put("email", record.getEmail());
+        }
+        if (record.getAge() != null) {
+            fragment.append("age = :age, ");
+            params.put("age", record.getAge());
+        }
+        if (record.getStatus() != null) {
+            fragment.append("`status` = :status, ");
+            params.put("status", record.getStatus());
+        }
+        if (record.getGmtCreate() != null) {
+            fragment.append("gmt_create = :gmtCreate, ");
+            params.put("gmtCreate", record.getGmtCreate());
+        }
+        if (record.getGmtModify() != null) {
+            fragment.append("gmt_modify = :gmtModify, ");
+            params.put("gmtModify", record.getGmtModify());
+        }
+        if (fragment.length() == 0) {
+            return;
+        }
+        fragment.setLength(fragment.length() - 2);
+        getNamedParameterJdbcTemplate().update("UPDATE " + Foo.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
+    }
+
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public int deleteByPrimaryKey(Long id) {
         return getJdbcTemplate().update("DELETE FROM " + Foo.TABLE_NAME + " WHERE id = ? ", id);
     }

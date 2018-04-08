@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<generatorConfiguration>
+    <context id="novel">
+        <table tableName="user" catalog="novel_admin" alias="u">
+        </table>
+    </context>
+</generatorConfiguration>
