@@ -612,7 +612,7 @@ public class WhaleGeneratorConfigurationParser {
             configuration.setEnableDAO(Boolean.parseBoolean(enableDAO));
         }
         if (stringHasValue(enableDAOMethods)) {
-            configuration.setEnableDAOMethods(Boolean.parseBoolean(enableDAOMethods));
+            configuration.setEnableDAOMethods(configuration.isEnableDAO() && !isFalse(enableDAOMethods));
         }
         if (stringHasValue(enableService)) {
             configuration.setEnableService(Boolean.parseBoolean(enableService));
