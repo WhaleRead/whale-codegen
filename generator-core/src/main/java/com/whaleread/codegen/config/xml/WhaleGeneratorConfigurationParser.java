@@ -283,48 +283,34 @@ public class WhaleGeneratorConfigurationParser {
         boolean enableDAOMethods = context.getBuiltInGeneratorConfiguration().isEnableDAOMethods();
 
         String enableInsert = tc.getProperty(DAO_ENABLE_INSERT);
-        if (stringHasValue(enableInsert)) {
-            tc.setEnableInsert(enableDAOMethods ? !isFalse(enableInsert) : isTrue(enableInsert));
-        }
-
         String enableInsertSelective = tc.getProperty(DAO_ENABLE_INSERT_SELECTIVE);
-        if (stringHasValue(enableInsertSelective)) {
-            tc.setEnableInsertSelective(enableDAOMethods ? !isFalse(enableInsertSelective) : isTrue(enableInsertSelective));
-        }
-
         String enableSelectByPrimaryKey = tc.getProperty(DAO_ENABLE_SELECT_BY_PRIMARY_KEY);
-        if (stringHasValue(enableSelectByPrimaryKey)) {
-            tc.setEnableSelectByPrimaryKey(enableDAOMethods ? !isFalse(enableSelectByPrimaryKey) : isTrue(enableSelectByPrimaryKey));
-        }
-
         String enableCountByCriteria = tc.getProperty(DAO_ENABLE_COUNT_BY_CRITERIA);
-        if (stringHasValue(enableCountByCriteria)) {
-            tc.setEnableCountByCriteria(enableDAOMethods ? !isFalse(enableCountByCriteria) : isTrue(enableCountByCriteria));
-        }
-
         String enableSelectByCriteria = tc.getProperty(DAO_ENABLE_SELECT_BY_CRITERIA);
-        if (stringHasValue(enableSelectByCriteria)) {
-            tc.setEnableSelectByCriteria(enableDAOMethods ? !isFalse(enableSelectByCriteria) : isTrue(enableSelectByCriteria));
-        }
-
         String enableUpdateByPrimaryKey = tc.getProperty(DAO_ENABLE_UPDATE_BY_PRIMARY_KEY);
-        if (stringHasValue(enableUpdateByPrimaryKey)) {
-            tc.setEnableUpdateByPrimaryKey(enableDAOMethods ? !isFalse(enableUpdateByPrimaryKey) : isTrue(enableUpdateByPrimaryKey));
-        }
-
         String enableUpdateByPrimaryKeySelective = tc.getProperty(DAO_ENABLE_UPDATE_BY_PRIMARY_KEY_SELECTIVE);
-        if (stringHasValue(enableUpdateByPrimaryKeySelective)) {
-            tc.setEnableUpdateByPrimaryKeySelective(enableDAOMethods ? !isFalse(enableUpdateByPrimaryKeySelective) : isTrue(enableUpdateByPrimaryKeySelective));
-        }
-
         String enableDeleteByPrimaryKey = tc.getProperty(DAO_ENABLE_DELETE_BY_PRIMARY_KEY);
-        if (stringHasValue(enableDeleteByPrimaryKey)) {
-            tc.setEnableDeleteByPrimaryKey(enableDAOMethods ? !isFalse(enableDeleteByPrimaryKey) : isTrue(enableDeleteByPrimaryKey));
-        }
-
         String enableDeleteByCriteria = tc.getProperty(DAO_ENABLE_DELETE_BY_CRITERIA);
-        if (stringHasValue(enableDeleteByCriteria)) {
-            tc.setEnableDeleteByCriteria(enableDAOMethods ? !isFalse(enableDeleteByCriteria) : isTrue(enableDeleteByCriteria));
+        if (enableDAOMethods) {
+            tc.setEnableInsert(!isFalse(enableInsert));
+            tc.setEnableInsertSelective(!isFalse(enableInsertSelective));
+            tc.setEnableSelectByPrimaryKey(!isFalse(enableSelectByPrimaryKey));
+            tc.setEnableCountByCriteria(!isFalse(enableCountByCriteria));
+            tc.setEnableSelectByCriteria(!isFalse(enableSelectByCriteria));
+            tc.setEnableUpdateByPrimaryKey(!isFalse(enableUpdateByPrimaryKey));
+            tc.setEnableUpdateByPrimaryKeySelective(!isFalse(enableUpdateByPrimaryKeySelective));
+            tc.setEnableDeleteByPrimaryKey(!isFalse(enableDeleteByPrimaryKey));
+            tc.setEnableDeleteByCriteria(!isFalse(enableDeleteByCriteria));
+        } else {
+            tc.setEnableInsert(isTrue(enableInsert));
+            tc.setEnableInsertSelective(isTrue(enableInsertSelective));
+            tc.setEnableSelectByPrimaryKey(isTrue(enableSelectByPrimaryKey));
+            tc.setEnableCountByCriteria(isTrue(enableCountByCriteria));
+            tc.setEnableSelectByCriteria(isTrue(enableSelectByCriteria));
+            tc.setEnableUpdateByPrimaryKey(isTrue(enableUpdateByPrimaryKey));
+            tc.setEnableUpdateByPrimaryKeySelective(isTrue(enableUpdateByPrimaryKeySelective));
+            tc.setEnableDeleteByPrimaryKey(isTrue(enableDeleteByPrimaryKey));
+            tc.setEnableDeleteByCriteria(isTrue(enableDeleteByCriteria));
         }
     }
 
@@ -601,7 +587,7 @@ public class WhaleGeneratorConfigurationParser {
             configuration.setServiceSuffix(serviceSuffix);
         }
 
-        if(stringHasValue(enableModel)) {
+        if (stringHasValue(enableModel)) {
             configuration.setEnableModel(Boolean.parseBoolean(enableModel));
         }
 
