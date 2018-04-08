@@ -129,7 +129,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         Parameter parameter = new Parameter(injectedType, "dataSource");
         method.addParameter(parameter);
-        if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("dataSource"))) {
+        if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("dataSource"))) {
             topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Qualifier"));
             parameter.addAnnotation("@Qualifier(\"" + introspectedTable.getTableConfiguration().getProperty("dataSource") + "\")");
         }
