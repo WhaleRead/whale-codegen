@@ -16,7 +16,8 @@ import java.util.*;
 
 import static com.whaleread.codegen.config.PropertyRegistry.TABLE_SHARDING_PARAMS;
 import static com.whaleread.codegen.config.PropertyRegistry.TABLE_SHARDING_TABLE_NAME;
-import static com.whaleread.codegen.internal.util.JavaBeansUtil.*;
+import static com.whaleread.codegen.internal.util.JavaBeansUtil.getGetterMethodName;
+import static com.whaleread.codegen.internal.util.JavaBeansUtil.getSetterMethodName;
 import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 
@@ -443,7 +444,9 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             @SuppressWarnings("unchecked") List<Parameter> shardingParams = (List<Parameter>) introspectedTable.getAttribute(TABLE_SHARDING_PARAMS);
             if (shardingParams != null) {
                 for (Parameter param : shardingParams) {
-                    element.addParameter(param);
+                    if (Collections.binarySearch(element.getParameters(), param, (o1, o2) -> o1.getName().equals(o2.getName()) && o1.getType().equals(o2.getType()) ? 0 : 1) == -1) {
+                        element.addParameter(param);
+                    }
                 }
             }
         }
