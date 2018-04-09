@@ -143,6 +143,8 @@
           enableDTO: whether generate DTOs, default false;
           enableDAO: whether generate Spring JDBC repositories, default false;
           enableService: whether generate Spring CRUD services, default false;
+          shardingTableName: use {tableName} for tableName placeholder
+          shardingParams: extra params for sharding
         -->
         <!ELEMENT table (property*, domainObjectRenamingRule?, columnRenamingRule?, (columnOverride | ignoreColumn | ignoreColumnsByRegex)*) >
         <!ATTLIST table

@@ -85,3 +85,9 @@ CREATE TABLE `boo` (
   KEY `channel` (`channel`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='漫画订阅表';
 
+CREATE TABLE `soo` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `name` (`name`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT 'soo';

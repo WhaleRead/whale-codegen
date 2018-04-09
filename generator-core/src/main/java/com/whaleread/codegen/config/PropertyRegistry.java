@@ -47,6 +47,8 @@ public class PropertyRegistry {
     public static final String TABLE_RUNTIME_TABLE_NAME = "runtimeTableName"; //$NON-NLS-1$
     public static final String TABLE_MODEL_ONLY = "modelOnly"; //$NON-NLS-1$
     public static final String TABLE_SELECT_ALL_ORDER_BY_CLAUSE = "selectAllOrderByClause"; //$NON-NLS-1$
+    public static final String TABLE_SHARDING_TABLE_NAME = "shardingTableName";
+    public static final String TABLE_SHARDING_PARAMS = "shardingParams";
 
     public static final String CONTEXT_BEGINNING_DELIMITER = "beginningDelimiter"; //$NON-NLS-1$
     public static final String CONTEXT_ENDING_DELIMITER = "endingDelimiter"; //$NON-NLS-1$

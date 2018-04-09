@@ -12,11 +12,10 @@ import com.whaleread.codegen.runtime.jdbc.spring.AliasBeanPropertyRowMapper;
 
 import javax.annotation.Generated;
 import javax.sql.DataSource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static com.whaleread.codegen.config.PropertyRegistry.TABLE_SHARDING_PARAMS;
+import static com.whaleread.codegen.config.PropertyRegistry.TABLE_SHARDING_TABLE_NAME;
 import static com.whaleread.codegen.internal.util.JavaBeansUtil.*;
 import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
@@ -26,6 +25,8 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
  */
 public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
     private static final String ROW_MAPPER_TYPE_NAME = "org.springframework.jdbc.core.RowMapper";
+    private static final String PROPERTY_SHARDING = "sharding";
+    private static final String PROPERTY_TABLE_NAME = "tableName";
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
@@ -59,6 +60,26 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         if (tableConfig.isEnableDTO()) {
             topLevelClass.addImportedType(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
         }
+
+        String shardingTableName = tableConfig.getProperty(TABLE_SHARDING_TABLE_NAME);
+        if (stringHasValue(shardingTableName)) {
+            introspectedTable.setAttribute(PROPERTY_SHARDING, true);
+            introspectedTable.setAttribute(PROPERTY_TABLE_NAME, shardingTableName.replace("{tableName}", introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_NAME"));
+            String shardingParams = tableConfig.getProperty(TABLE_SHARDING_PARAMS);
+            if (stringHasValue(shardingParams)) {
+                List<Parameter> shardingParamList = new ArrayList<>();
+                for (String paramTupleStr : shardingParams.split(",")) {
+                    String[] paramTuple = paramTupleStr.split(" ");
+                    Parameter param = new Parameter(new FullyQualifiedJavaType(paramTuple[0]), paramTuple[1]);
+                    topLevelClass.addImportedType(param.getType());
+                    shardingParamList.add(param);
+                }
+                introspectedTable.setAttribute(TABLE_SHARDING_PARAMS, shardingParamList);
+            }
+        } else {
+            introspectedTable.setAttribute(PROPERTY_TABLE_NAME, introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_NAME");
+        }
+
 
         addRowMapperField(topLevelClass);
         addInjectMethod(topLevelClass);
@@ -152,6 +173,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             whereFragment.append(column.getColumnName()).append(" = ? AND ");
             valueFragment.append(column.getJavaProperty()).append(", ");
         }
+        addExtraParams(method);
         whereFragment.setLength(whereFragment.length() - 4);
         valueFragment.setLength(valueFragment.length() - 2);
         String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
@@ -173,8 +195,8 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         String sb = "return getJdbcTemplate().query(\"SELECT \" + " +
                 domainObjectName +
                 ".BASE_COLUMNS + \" FROM \" + " +
-                domainObjectName +
-                ".TABLE_NAME + \" WHERE " +
+                introspectedTable.getAttribute(PROPERTY_TABLE_NAME) +
+                " + \" WHERE " +
                 whereFragment +
                 "\", new Object[]{" +
                 valueFragment +
@@ -193,6 +215,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         Method method = new Method("updateByPrimaryKeySelective");
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getModelType()), "record"));
+        addExtraParams(method);
         method.addBodyLine("StringBuilder fragment = new StringBuilder();");
         method.addBodyLine("Map<String, Object> params = new HashMap<>();");
         StringBuilder whereFragment = new StringBuilder();
@@ -212,7 +235,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.addBodyLine("return;");
         method.addBodyLine("}");
         method.addBodyLine("fragment.setLength(fragment.length() - 2);");
-        method.addBodyLine("getNamedParameterJdbcTemplate().update(\"UPDATE \" + " + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_NAME + \" SET \" + fragment + \" WHERE " + whereFragment + "\", params);");
+        method.addBodyLine("getNamedParameterJdbcTemplate().update(\"UPDATE \" + " + introspectedTable.getAttribute(PROPERTY_TABLE_NAME) + " + \" SET \" + fragment + \" WHERE " + whereFragment + "\", params);");
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         topLevelClass.addMethod(method);
     }
@@ -223,6 +246,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         Method method = new Method("insertSelective");
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getModelType()), "record"));
+        addExtraParams(method);
         method.addBodyLine("Map<String, Object> params = new HashMap<>();");
         method.addBodyLine("StringBuilder columnsFragment = new StringBuilder();");
         method.addBodyLine("StringBuilder valuesFragment = new StringBuilder();");
@@ -244,15 +268,14 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.addBodyLine("valuesFragment.setLength(valuesFragment.length() - 2);");
         method.addBodyLine("}");
         StringBuilder sb = new StringBuilder();
-        sb.append("getNamedParameterJdbcTemplate().update(\"INSERT INTO \" + ").append(introspectedTable.getFullyQualifiedTable().getDomainObjectName()).append(".TABLE_NAME + \" (\" + columnsFragment + \") VALUES (\" + valuesFragment + \")\", new MapSqlParameterSource(params)");
+        sb.append("getNamedParameterJdbcTemplate().update(\"INSERT INTO \" + ").append(introspectedTable.getAttribute(PROPERTY_TABLE_NAME)).append(" + \" (\" + columnsFragment + \") VALUES (\" + valuesFragment + \")\", new MapSqlParameterSource(params)");
+        //noinspection Duplicates
         if (autoIncrementColumn != null) {
             topLevelClass.addImportedType("org.springframework.jdbc.support.KeyHolder");
             topLevelClass.addImportedType("org.springframework.jdbc.support.GeneratedKeyHolder");
-//            method.setReturnType(autoIncrementColumn.getFullyQualifiedJavaType());
             method.addBodyLine("KeyHolder keyHolder = new GeneratedKeyHolder();");
             sb.append(", keyHolder);");
             method.addBodyLine(sb.toString());
-//            method.addBodyLine("return keyHolder.getKey()." + (autoIncrementColumn.getFullyQualifiedJavaType().getShortName().equals("Long") ? "long" : "int") + "Value();");
             method.addBodyLine("record." + getSetterMethodName(autoIncrementColumn.getJavaProperty()) + "(keyHolder.getKey()." + (autoIncrementColumn.getFullyQualifiedJavaType().getShortName().equals("Long") ? "long" : "int") + "Value()" + ");");
         } else {
             sb.append(");");
@@ -269,6 +292,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         Method method = new Method("insert");
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getModelType()), "record"));
+        addExtraParams(method);
         method.addBodyLine("Map<String, Object> params = new HashMap<>();");
         IntrospectedColumn autoIncrementColumn = null;
         for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
@@ -297,27 +321,26 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             columnsFragment.setLength(columnsFragment.length() - 2);
             valuesFragment.setLength(valuesFragment.length() - 2);
         }
-        String insertSql = "\"INSERT INTO \" + " + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_NAME + \"(" +
+        String insertSql = "\"INSERT INTO \" + " + introspectedTable.getAttribute(PROPERTY_TABLE_NAME) + " + \"(" +
                 columnsFragment + ") VALUES (" + valuesFragment + ")\"";
-        Field insertSqlField = new Field("INSERT_SQL", FullyQualifiedJavaType.getStringInstance());
-        insertSqlField.setInitializationString(insertSql);
-        privateStaticFinal(insertSqlField);
-        context.getCommentGenerator().addGeneratedAnnotation(insertSqlField, topLevelClass.getImportedTypes());
-        topLevelClass.addField(insertSqlField);
+//        Field insertSqlField = new Field("INSERT_SQL", FullyQualifiedJavaType.getStringInstance());
+//        insertSqlField.setInitializationString(insertSql);
+//        privateStaticFinal(insertSqlField);
+//        context.getCommentGenerator().addGeneratedAnnotation(insertSqlField, topLevelClass.getImportedTypes());
+//        topLevelClass.addField(insertSqlField);
 //        method.addBodyLine("if (columnsFragment.length() > 0) {");
 //        method.addBodyLine("columnsFragment.setLength(columnsFragment.length() - 2);");
 //        method.addBodyLine("valuesFragment.setLength(valuesFragment.length() - 2);");
 //        method.addBodyLine("}");
         StringBuilder sb = new StringBuilder();
-        sb.append("getNamedParameterJdbcTemplate().update(INSERT_SQL, new MapSqlParameterSource(params)");
+        sb.append("getNamedParameterJdbcTemplate().update(").append(insertSql).append(", new MapSqlParameterSource(params)");
+        //noinspection Duplicates
         if (autoIncrementColumn != null) {
             topLevelClass.addImportedType("org.springframework.jdbc.support.KeyHolder");
             topLevelClass.addImportedType("org.springframework.jdbc.support.GeneratedKeyHolder");
-//            method.setReturnType(autoIncrementColumn.getFullyQualifiedJavaType());
             method.addBodyLine("KeyHolder keyHolder = new GeneratedKeyHolder();");
             sb.append(", keyHolder);");
             method.addBodyLine(sb.toString());
-//            method.addBodyLine("return keyHolder.getKey()." + (autoIncrementColumn.getFullyQualifiedJavaType().getShortName().equals("Long") ? "long" : "int") + "Value();");
             method.addBodyLine("record." + getSetterMethodName(autoIncrementColumn.getJavaProperty()) + "(keyHolder.getKey()." + (autoIncrementColumn.getFullyQualifiedJavaType().getShortName().equals("Long") ? "long" : "int") + "Value()" + ");");
         } else {
             sb.append(");");
@@ -331,15 +354,15 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
     private void addCountByCriteriaMethod(TopLevelClass topLevelClass) {
         topLevelClass.addImportedType(Map.class.getName());
         topLevelClass.addImportedType(HashMap.class.getName());
-        String objectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
         Method method = new Method("countByCriteria");
         method.setVisibility(JavaVisibility.PUBLIC);
         FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
         method.addParameter(new Parameter(criteriaType, "criteria"));
+        addExtraParams(method);
         method.addBodyLine("Map<String, Object> params = criteria.toSql();");
         String alias = introspectedTable.getFullyQualifiedTable().getAlias();
         boolean hasAlias = stringHasValue(alias);
-        method.addBodyLine("return getNamedParameterJdbcTemplate().queryForObject(\"SELECT COUNT(0) FROM \" + " + objectName + ".TABLE_NAME + \" " + (hasAlias ? alias : "") + " \" + criteria.getWhereClause(), params, int.class);");
+        method.addBodyLine("return getNamedParameterJdbcTemplate().queryForObject(\"SELECT COUNT(0) FROM \" + " + introspectedTable.getAttribute(PROPERTY_TABLE_NAME) + " + \" " + (hasAlias ? alias : "") + " \" + criteria.getWhereClause(), params, int.class);");
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         topLevelClass.addImportedType(criteriaType);
@@ -358,8 +381,9 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.addParameter(new Parameter(criteriaType, "criteria"));
         method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "offset"));
         method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "count"));
+        addExtraParams(method);
         method.addBodyLine("Map<String, Object> params = criteria.toSql();");
-        method.addBodyLine("return getNamedParameterJdbcTemplate().query(\"SELECT \" + " + objectName + (hasAlias ? ".ALIASED_BASE_COLUMNS" : ".BASE_COLUMNS") + " + \" FROM \" + " + objectName + ".TABLE_NAME + \" " + (hasAlias ? alias : "") + " \" + criteria.getWhereClause() + criteria.getOrderByClause() + \" LIMIT \" + offset + ',' + count, params, rowMapper);");
+        method.addBodyLine("return getNamedParameterJdbcTemplate().query(\"SELECT \" + " + objectName + (hasAlias ? ".ALIASED_BASE_COLUMNS" : ".BASE_COLUMNS") + " + \" FROM \" + " + introspectedTable.getAttribute(PROPERTY_TABLE_NAME) + " + \" " + (hasAlias ? alias : "") + " \" + criteria.getWhereClause() + criteria.getOrderByClause() + \" LIMIT \" + offset + ',' + count, params, rowMapper);");
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(List.class.getName());
         if (introspectedTable.getTableConfiguration().isEnableDTO()) {
             returnType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
@@ -385,13 +409,13 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             whereFragment.append(column.getColumnName()).append(" = ? AND ");
             valueFragment.append(column.getJavaProperty()).append(", ");
         }
+        addExtraParams(method);
         whereFragment.setLength(whereFragment.length() - 4);
         valueFragment.setLength(valueFragment.length() - 2);
-        String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         String sb = "return getJdbcTemplate().update(\"DELETE FROM \" + " +
-                domainObjectName +
-                ".TABLE_NAME + \" WHERE " +
+                introspectedTable.getAttribute(PROPERTY_TABLE_NAME) +
+                " + \" WHERE " +
                 whereFragment +
                 "\", " +
                 valueFragment +
@@ -402,15 +426,26 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
     }
 
     private void addDeleteByCriteriaMethod(TopLevelClass topLevelClass) {
-        String objectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
         Method method = new Method("deleteByCriteria");
         method.setVisibility(JavaVisibility.PUBLIC);
         FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
         method.addParameter(new Parameter(criteriaType, "criteria"));
+        addExtraParams(method);
         method.addBodyLine("Map<String, Object> params = criteria.toSql();");
-        method.addBodyLine("getNamedParameterJdbcTemplate().update(\"DELETE FROM \" + " + objectName + ".TABLE_NAME + ' ' + criteria.getWhereClause(), params);");
+        method.addBodyLine("getNamedParameterJdbcTemplate().update(\"DELETE FROM \" + " + introspectedTable.getAttribute(PROPERTY_TABLE_NAME) + " + ' ' + criteria.getWhereClause(), params);");
         context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
         topLevelClass.addImportedType(criteriaType);
         topLevelClass.addMethod(method);
+    }
+
+    private void addExtraParams(Method element) {
+        if (introspectedTable.getAttribute(PROPERTY_SHARDING) != null) {
+            @SuppressWarnings("unchecked") List<Parameter> shardingParams = (List<Parameter>) introspectedTable.getAttribute(TABLE_SHARDING_PARAMS);
+            if (shardingParams != null) {
+                for (Parameter param : shardingParams) {
+                    element.addParameter(param);
+                }
+            }
+        }
     }
 }

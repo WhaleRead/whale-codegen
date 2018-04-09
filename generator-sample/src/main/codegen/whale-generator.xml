@@ -30,6 +30,11 @@
 
         <table tableName="foo" catalog="novel_admin" alias="f"/>
 
+        <table tableName="soo" catalog="novel_admin" alias="s">
+            <property name="shardingTableName" value="{tableName}+ ShardingUtils.nodeSuffix(userId, shardingCount)"/>
+            <property name="shardingParams" value="long userId"/>
+        </table>
+
         <table tableName="boo" catalog="novel_admin" alias="b">
             <property name="enableInsert" value="false"/>
             <property name="enableSelectByPrimaryKey" value="false"/>

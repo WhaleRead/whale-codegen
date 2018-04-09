@@ -19,25 +19,26 @@ import org.springframework.stereotype.Repository;
 /**
  * table: novel_admin.boo
  */
-@Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.boo")
+@Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.boo")
 @Repository
 public class BooRepository extends NamedParameterJdbcDaoSupport {
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     private RowMapper<BooDTO> rowMapper = new AliasBeanPropertyRowMapper<>(Boo.TABLE_ALIAS, BooDTO.class);
 
     @Autowired
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void inject(DataSource dataSource) {
         super.setDataSource(dataSource);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Boo.TABLE_NAME + " b " + criteria.getWhereClause(), params, int.class);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void insertSelective(Boo record) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder columnsFragment = new StringBuilder();
