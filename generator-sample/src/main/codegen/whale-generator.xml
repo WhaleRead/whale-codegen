@@ -6,6 +6,10 @@
     <context id="novel">
         <property name="javaFileEncoding" value="UTF-8"/>
         <property name="autoDelimitKeywords" value="true"/>
+        <plugin type="com.whaleread.codegen.plugins.SimpleShardingPlugin">
+            <property name="importedTypes" value="com.whaleread.codegen.sample.novel_admin.ShardingUtils"/>
+            <property name="shardingTableName" value="{tableName}+ ShardingUtils.nodeSuffix(userId, shardingCount)"/>
+        </plugin>
         <commentGenerator>
             <property name="suppressDate" value="true"/>
             <property name="addRemarkComments" value="true"/>
@@ -31,8 +35,11 @@
         <table tableName="foo" catalog="novel_admin" alias="f"/>
 
         <table tableName="soo" catalog="novel_admin" alias="s">
-            <property name="shardingTableName" value="{tableName}+ ShardingUtils.nodeSuffix(userId, shardingCount)"/>
-            <property name="shardingParams" value="long userId"/>
+            <property name="sharding" value="true"/>
+            <property name="shardingColumn" value="user_id"/>
+            <property name="shardingCountKey" value="sharding_count.soo"/>
+            <!--<property name="shardingTableName" value="{tableName}+ ShardingUtils.nodeSuffix(userId, shardingCount)"/>-->
+            <!--<property name="shardingParams" value="long userId"/>-->
         </table>
 
         <table tableName="boo" catalog="novel_admin" alias="b">

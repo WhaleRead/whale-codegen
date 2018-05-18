@@ -2,7 +2,6 @@ package com.whaleread.codegen.sample.novel_admin.repository;
 
 import com.whaleread.codegen.runtime.jdbc.Criteria;
 import com.whaleread.codegen.runtime.jdbc.spring.AliasBeanPropertyRowMapper;
-import com.whaleread.codegen.sample.novel_admin.dto.BooDTO;
 import com.whaleread.codegen.sample.novel_admin.model.Boo;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Repository;
 public class BooRepository extends NamedParameterJdbcDaoSupport {
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<BooDTO> rowMapper = new AliasBeanPropertyRowMapper<>(Boo.TABLE_ALIAS, BooDTO.class);
+    private RowMapper<Boo> rowMapper = new AliasBeanPropertyRowMapper<>(Boo.TABLE_ALIAS, Boo.class);
 
     @Autowired
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")

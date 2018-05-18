@@ -2,13 +2,21 @@ package com.whaleread.codegen.generator.builtin;
 
 import com.whaleread.codegen.api.CommentGenerator;
 import com.whaleread.codegen.api.IntrospectedColumn;
-import com.whaleread.codegen.api.dom.java.*;
+import com.whaleread.codegen.api.dom.java.CompilationUnit;
+import com.whaleread.codegen.api.dom.java.Field;
+import com.whaleread.codegen.api.dom.java.FullyQualifiedJavaType;
+import com.whaleread.codegen.api.dom.java.JavaVisibility;
+import com.whaleread.codegen.api.dom.java.Method;
+import com.whaleread.codegen.api.dom.java.Parameter;
+import com.whaleread.codegen.api.dom.java.TopLevelClass;
 import com.whaleread.codegen.config.TableConfiguration;
 import com.whaleread.codegen.generator.AbstractJavaGenerator;
 import com.whaleread.codegen.runtime.jdbc.Criteria;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 
@@ -75,25 +83,19 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         if (introspectedTable.getPrimaryKeyColumns().isEmpty()) {
             return;
         }
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         Method method = new Method("findById");
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder repositoryParams = new StringBuilder();
-        for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
-            topLevelClass.addImportedType(column.getFullyQualifiedJavaType());
-            method.addParameter(new Parameter(column.getFullyQualifiedJavaType(), column.getJavaProperty()));
-            if (repositoryParams.length() > 0) {
-                repositoryParams.append(", ");
-            }
-            repositoryParams.append(column.getJavaProperty());
-        }
+        preparePrimaryKeyArgs(importedTypes, method, repositoryParams);
         FullyQualifiedJavaType recordType;
-        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
-            recordType = new FullyQualifiedJavaType(introspectedTable.getDtoType());
-        } else {
-            recordType = new FullyQualifiedJavaType(introspectedTable.getModelType());
-        }
+//        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
+//            recordType = new FullyQualifiedJavaType(introspectedTable.getDtoType());
+//        } else {
+        recordType = new FullyQualifiedJavaType(introspectedTable.getModelType());
+//        }
         if (context.getBuiltInGeneratorConfiguration().isEnableNonNull()) {
-            topLevelClass.addImportedType("java.util.Optional");
+            importedTypes.add(new FullyQualifiedJavaType("java.util.Optional"));
             FullyQualifiedJavaType optionalType = new FullyQualifiedJavaType("java.util.Optional");
             optionalType.addTypeArgument(recordType);
             method.setReturnType(optionalType);
@@ -101,55 +103,78 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
             method.setReturnType(recordType);
         }
 
-        topLevelClass.addImportedType(recordType);
+        importedTypes.add(recordType);
         String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".selectByPrimaryKey(" + repositoryParams.toString() + ");";
         method.addBodyLine(sb);
-        context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
-        topLevelClass.addMethod(method);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceFindByIdMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
+    }
+
+    private void preparePrimaryKeyArgs(Set<FullyQualifiedJavaType> importedTypes, Method method, StringBuilder repositoryParams) {
+        for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
+            importedTypes.add(column.getFullyQualifiedJavaType());
+            method.addParameter(new Parameter(column.getFullyQualifiedJavaType(), column.getJavaProperty()));
+            if (repositoryParams.length() > 0) {
+                repositoryParams.append(", ");
+            }
+            repositoryParams.append(column.getJavaProperty());
+        }
     }
 
     private void addCountByCriteriaMethod(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         Method method = new Method("countByCriteria");
         FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
-        topLevelClass.addImportedType(criteriaType);
+        importedTypes.add(criteriaType);
         method.addParameter(new Parameter(criteriaType, "criteria"));
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".countByCriteria(criteria);";
         method.addBodyLine(sb);
-        context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
-        topLevelClass.addMethod(method);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceCountByCriteriaMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
     }
 
     private void addFindByCriteriaMethod(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         Method method = new Method("findByCriteria");
         FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
-        topLevelClass.addImportedType(criteriaType);
+        importedTypes.add(criteriaType);
         method.addParameter(new Parameter(criteriaType, "criteria"));
         method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "offset"));
         method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "limit"));
         method.setVisibility(JavaVisibility.PUBLIC);
         FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(List.class.getName());
         FullyQualifiedJavaType returnTypeArgument;
-        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
-            returnTypeArgument = new FullyQualifiedJavaType(introspectedTable.getDtoType());
-        } else {
-            returnTypeArgument = new FullyQualifiedJavaType(introspectedTable.getModelType());
-        }
+//        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
+//            returnTypeArgument = new FullyQualifiedJavaType(introspectedTable.getDtoType());
+//        } else {
+        returnTypeArgument = new FullyQualifiedJavaType(introspectedTable.getModelType());
+//        }
         returnType.addTypeArgument(returnTypeArgument);
-        topLevelClass.addImportedType(List.class.getName());
+        importedTypes.add(new FullyQualifiedJavaType(List.class.getName()));
         method.setReturnType(returnType);
-        topLevelClass.addImportedType(returnType);
+        importedTypes.add(returnType);
         String sb = "return " + introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".selectByCriteria(criteria, offset, limit);";
         method.addBodyLine(sb);
-        context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
-        topLevelClass.addMethod(method);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceFindByCriteriaMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
     }
 
     private void addSaveMethod(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         Method method = new Method("save");
         FullyQualifiedJavaType modelType = new FullyQualifiedJavaType(introspectedTable.getModelType());
-        topLevelClass.addImportedType(modelType);
+        importedTypes.add(modelType);
         method.addParameter(new Parameter(modelType, "record"));
         method.setVisibility(JavaVisibility.PUBLIC);
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".insertSelective(record);";
@@ -159,14 +184,18 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         } else {
             method.addAnnotation("@Transactional");
         }
-        context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
-        topLevelClass.addMethod(method);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceSaveMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
     }
 
     private void addUpdateMethod(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         Method method = new Method("update");
         FullyQualifiedJavaType modelType = new FullyQualifiedJavaType(introspectedTable.getModelType());
-        topLevelClass.addImportedType(modelType);
+        importedTypes.add(modelType);
         method.addParameter(new Parameter(modelType, "record"));
         method.setVisibility(JavaVisibility.PUBLIC);
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".updateByPrimaryKeySelective(record);";
@@ -176,25 +205,22 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         } else {
             method.addAnnotation("@Transactional");
         }
-        context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
-        topLevelClass.addMethod(method);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceUpdateMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
     }
 
     private void addDeleteByIdMethod(TopLevelClass topLevelClass) {
         if (introspectedTable.getPrimaryKeyColumns().isEmpty()) {
             return;
         }
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
         Method method = new Method("deleteById");
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder repositoryParams = new StringBuilder();
-        for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
-            topLevelClass.addImportedType(column.getFullyQualifiedJavaType());
-            method.addParameter(new Parameter(column.getFullyQualifiedJavaType(), column.getJavaProperty()));
-            if (repositoryParams.length() > 0) {
-                repositoryParams.append(", ");
-            }
-            repositoryParams.append(column.getJavaProperty());
-        }
+        preparePrimaryKeyArgs(importedTypes, method, repositoryParams);
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByPrimaryKey(" + repositoryParams.toString() + ");";
         method.addBodyLine(sb);
         if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
@@ -202,7 +228,10 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         } else {
             method.addAnnotation("@Transactional");
         }
-        context.getCommentGenerator().addGeneratedAnnotation(method, topLevelClass.getImportedTypes());
-        topLevelClass.addMethod(method);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceDeleteByIdMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.whaleread.codegen.sample.novel_admin.repository;
 
 import com.whaleread.codegen.runtime.jdbc.Criteria;
-import com.whaleread.codegen.sample.novel_admin.dto.RoleDTO;
 import com.whaleread.codegen.sample.novel_admin.model.Role;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Repository;
 public class RoleRepository extends NamedParameterJdbcDaoSupport {
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<RoleDTO> rowMapper = new BeanPropertyRowMapper<>(RoleDTO.class);
+    private RowMapper<Role> rowMapper = new BeanPropertyRowMapper<>(Role.class);
 
     @Autowired
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
@@ -35,7 +34,7 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public Optional<RoleDTO> selectByPrimaryKey(Long id) {
+    public Optional<Role> selectByPrimaryKey(Long id) {
         return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
@@ -46,7 +45,7 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public List<RoleDTO> selectByCriteria(Criteria criteria, int offset, int count) {
+    public List<Role> selectByCriteria(Criteria criteria, int offset, int count) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }

@@ -35,9 +35,9 @@ public class DTOGenerator extends AbstractJavaGenerator {
         commentGenerator.addJavaFileComment(topLevelClass);
         commentGenerator.addGeneratedAnnotation(topLevelClass, topLevelClass.getImportedTypes());
 
-        FullyQualifiedJavaType modelType = new FullyQualifiedJavaType(introspectedTable.getModelType());
-        topLevelClass.setSuperClass(modelType);
-        topLevelClass.addImportedType(modelType);
+//        FullyQualifiedJavaType modelType = new FullyQualifiedJavaType(introspectedTable.getModelType());
+//        topLevelClass.setSuperClass(modelType);
+//        topLevelClass.addImportedType(modelType);
 
         List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
         if (context.getPlugins().modelBaseRecordClassGenerated(topLevelClass,

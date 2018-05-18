@@ -1,7 +1,6 @@
 package com.whaleread.codegen.sample.novel_admin.repository;
 
 import com.whaleread.codegen.runtime.jdbc.Criteria;
-import com.whaleread.codegen.sample.novel_admin.dto.PermDTO;
 import com.whaleread.codegen.sample.novel_admin.model.Perm;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Repository;
 public class PermRepository extends NamedParameterJdbcDaoSupport {
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<PermDTO> rowMapper = new BeanPropertyRowMapper<>(PermDTO.class);
+    private RowMapper<Perm> rowMapper = new BeanPropertyRowMapper<>(Perm.class);
 
     @Autowired
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
@@ -35,7 +34,7 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public Optional<PermDTO> selectByPrimaryKey(Long id) {
+    public Optional<Perm> selectByPrimaryKey(Long id) {
         return getJdbcTemplate().query("SELECT " + Perm.BASE_COLUMNS + " FROM " + Perm.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
@@ -46,7 +45,7 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public List<PermDTO> selectByCriteria(Criteria criteria, int offset, int count) {
+    public List<Perm> selectByCriteria(Criteria criteria, int offset, int count) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + Perm.BASE_COLUMNS + " FROM " + Perm.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }

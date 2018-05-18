@@ -88,6 +88,7 @@ CREATE TABLE `boo` (
 CREATE TABLE `soo` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `user_id` bigint(20) NOT NULL COMMENT '用户编号',
   PRIMARY KEY (`id`),
   KEY `name` (`name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT 'soo';
