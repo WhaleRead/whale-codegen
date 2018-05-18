@@ -15,15 +15,21 @@
  */
 package com.whaleread.codegen.config;
 
-import com.whaleread.codegen.api.*;
+import com.whaleread.codegen.api.CommentGenerator;
+import com.whaleread.codegen.api.ConnectionFactory;
+import com.whaleread.codegen.api.GeneratedFile;
+import com.whaleread.codegen.api.IntrospectedTable;
+import com.whaleread.codegen.api.JavaFormatter;
+import com.whaleread.codegen.api.JavaTypeResolver;
+import com.whaleread.codegen.api.Plugin;
+import com.whaleread.codegen.api.ProgressCallback;
+import com.whaleread.codegen.api.XmlFormatter;
 import com.whaleread.codegen.api.dom.xml.Attribute;
 import com.whaleread.codegen.api.dom.xml.XmlElement;
 import com.whaleread.codegen.internal.JDBCConnectionFactory;
 import com.whaleread.codegen.internal.ObjectFactory;
 import com.whaleread.codegen.internal.PluginAggregator;
 import com.whaleread.codegen.internal.db.DatabaseIntrospector;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -31,7 +37,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import static com.whaleread.codegen.internal.util.StringUtility.*;
+import static com.whaleread.codegen.internal.util.StringUtility.composeFullyQualifiedTableName;
+import static com.whaleread.codegen.internal.util.StringUtility.isTrue;
+import static com.whaleread.codegen.internal.util.StringUtility.stringHasValue;
 import static com.whaleread.codegen.internal.util.messages.Messages.getString;
 
 /**
@@ -49,8 +57,6 @@ public class Context extends PropertyHolder {
 
     private JavaTypeResolverConfiguration javaTypeResolverConfiguration;
 
-    @Getter
-    @Setter
     private BuiltInGeneratorConfiguration builtInGeneratorConfiguration;
 
     private ArrayList<TableConfiguration> tableConfigurations;
@@ -475,5 +481,13 @@ public class Context extends PropertyHolder {
 
     public void setConnectionFactoryConfiguration(ConnectionFactoryConfiguration connectionFactoryConfiguration) {
         this.connectionFactoryConfiguration = connectionFactoryConfiguration;
+    }
+
+    public BuiltInGeneratorConfiguration getBuiltInGeneratorConfiguration() {
+        return builtInGeneratorConfiguration;
+    }
+
+    public void setBuiltInGeneratorConfiguration(BuiltInGeneratorConfiguration builtInGeneratorConfiguration) {
+        this.builtInGeneratorConfiguration = builtInGeneratorConfiguration;
     }
 }

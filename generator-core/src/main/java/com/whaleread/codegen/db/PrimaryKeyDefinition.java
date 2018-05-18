@@ -1,13 +1,8 @@
 package com.whaleread.codegen.db;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Created by dolphin on 2018/1/13
  */
-@Getter
-@Setter
 public class PrimaryKeyDefinition implements ResultSetRow{
     private String name;
     private short sequence;
@@ -26,5 +21,21 @@ public class PrimaryKeyDefinition implements ResultSetRow{
             return sequence;
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public short getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(short sequence) {
+        this.sequence = sequence;
     }
 }

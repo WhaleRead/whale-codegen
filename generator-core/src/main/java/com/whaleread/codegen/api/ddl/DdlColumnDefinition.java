@@ -1,8 +1,6 @@
 package com.whaleread.codegen.api.ddl;
 
 import com.whaleread.codegen.db.ResultSetRow;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 
@@ -10,8 +8,6 @@ import java.util.List;
  * Column definition read from database metadata
  * Created by dolphin on 2018/1/13
  */
-@Getter
-@Setter
 public class DdlColumnDefinition implements ResultSetRow {
     private final String catalog;
     private final String schema;
@@ -111,5 +107,141 @@ public class DdlColumnDefinition implements ResultSetRow {
             result.append(" COMMENT '").append(remarks).append("'");
         }
         return result.toString();
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public String getTable() {
+        return table;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isQuoted() {
+        return quoted;
+    }
+
+    public void setQuoted(boolean quoted) {
+        this.quoted = quoted;
+    }
+
+    public Integer getNullable() {
+        return nullable;
+    }
+
+    public void setNullable(Integer nullable) {
+        this.nullable = nullable;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public String getOriginType() {
+        return originType;
+    }
+
+    public void setOriginType(String originType) {
+        this.originType = originType;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public int getScale() {
+        return scale;
+    }
+
+    public void setScale(int scale) {
+        this.scale = scale;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
+    }
+
+    public short getKeySequence() {
+        return keySequence;
+    }
+
+    public void setKeySequence(short keySequence) {
+        this.keySequence = keySequence;
+    }
+
+    public boolean isAutoIncrement() {
+        return autoIncrement;
+    }
+
+    public void setAutoIncrement(boolean autoIncrement) {
+        this.autoIncrement = autoIncrement;
+    }
+
+    public boolean isGeneratedColumn() {
+        return generatedColumn;
+    }
+
+    public void setGeneratedColumn(boolean generatedColumn) {
+        this.generatedColumn = generatedColumn;
+    }
+
+    public int getOriginalPosition() {
+        return originalPosition;
+    }
+
+    public void setOriginalPosition(int originalPosition) {
+        this.originalPosition = originalPosition;
+    }
+
+    public boolean isPrimaryKey() {
+        return primaryKey;
+    }
+
+    public void setPrimaryKey(boolean primaryKey) {
+        this.primaryKey = primaryKey;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public List<String> getEnums() {
+        return enums;
+    }
+
+    public void setEnums(List<String> enums) {
+        this.enums = enums;
     }
 }

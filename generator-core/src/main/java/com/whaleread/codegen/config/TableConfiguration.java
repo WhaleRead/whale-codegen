@@ -17,8 +17,6 @@ package com.whaleread.codegen.config;
 
 import com.whaleread.codegen.api.dom.xml.Attribute;
 import com.whaleread.codegen.api.dom.xml.XmlElement;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,55 +36,29 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
  * @author Jeff Butler
  */
 public class TableConfiguration extends PropertyHolder {
-    @Getter
-    @Setter
     private boolean enableModel;
 
-    @Getter
-    @Setter
     private boolean enableDTO;
 
-    @Getter
-    @Setter
     private boolean enableDAO;
 
-    @Getter
-    @Setter
     private boolean enableService;
 
-    @Getter
-    @Setter
     private boolean enableInsert;
 
-    @Getter
-    @Setter
     private boolean enableInsertSelective;
 
-    @Getter
-    @Setter
     private boolean enableSelectByPrimaryKey;
 
-    @Getter
-    @Setter
     private boolean enableCountByCriteria;
-    @Getter
-    @Setter
     private boolean enableSelectByCriteria;
 
-    @Getter
-    @Setter
     private boolean enableUpdateByPrimaryKey;
 
-    @Getter
-    @Setter
     private boolean enableUpdateByPrimaryKeySelective;
 
-    @Getter
-    @Setter
     private boolean enableDeleteByPrimaryKey;
 
-    @Getter
-    @Setter
     private boolean enableDeleteByCriteria;
 
     private List<ColumnOverride> columnOverrides;
@@ -105,31 +77,17 @@ public class TableConfiguration extends PropertyHolder {
 
     private String alias;
 
-    @Getter
-    @Setter
     private boolean wildcardEscapingEnabled;
 
-    @Getter
-    @Setter
     private boolean delimitIdentifiers;
 
-    @Getter
-    @Setter
     private DomainObjectRenamingRule domainObjectRenamingRule;
 
-    @Getter
-    @Setter
     private ColumnRenamingRule columnRenamingRule;
 
-    @Getter
-    @Setter
     private boolean isAllColumnDelimitingEnabled;
 
-    @Getter
-    @Setter
     private String mapperName;
-    @Getter
-    @Setter
     private String sqlProviderName;
 
     private List<IgnoredColumnPattern> ignoredColumnPatterns = new ArrayList<>();
@@ -485,5 +443,185 @@ public class TableConfiguration extends PropertyHolder {
         for (IgnoredColumnPattern ignoredColumnPattern : ignoredColumnPatterns) {
             ignoredColumnPattern.validate(errors, fqTableName);
         }
+    }
+
+    public boolean isEnableModel() {
+        return enableModel;
+    }
+
+    public void setEnableModel(boolean enableModel) {
+        this.enableModel = enableModel;
+    }
+
+    public boolean isEnableDTO() {
+        return enableDTO;
+    }
+
+    public void setEnableDTO(boolean enableDTO) {
+        this.enableDTO = enableDTO;
+    }
+
+    public boolean isEnableDAO() {
+        return enableDAO;
+    }
+
+    public void setEnableDAO(boolean enableDAO) {
+        this.enableDAO = enableDAO;
+    }
+
+    public boolean isEnableService() {
+        return enableService;
+    }
+
+    public void setEnableService(boolean enableService) {
+        this.enableService = enableService;
+    }
+
+    public boolean isEnableInsert() {
+        return enableInsert;
+    }
+
+    public void setEnableInsert(boolean enableInsert) {
+        this.enableInsert = enableInsert;
+    }
+
+    public boolean isEnableInsertSelective() {
+        return enableInsertSelective;
+    }
+
+    public void setEnableInsertSelective(boolean enableInsertSelective) {
+        this.enableInsertSelective = enableInsertSelective;
+    }
+
+    public boolean isEnableSelectByPrimaryKey() {
+        return enableSelectByPrimaryKey;
+    }
+
+    public void setEnableSelectByPrimaryKey(boolean enableSelectByPrimaryKey) {
+        this.enableSelectByPrimaryKey = enableSelectByPrimaryKey;
+    }
+
+    public boolean isEnableCountByCriteria() {
+        return enableCountByCriteria;
+    }
+
+    public void setEnableCountByCriteria(boolean enableCountByCriteria) {
+        this.enableCountByCriteria = enableCountByCriteria;
+    }
+
+    public boolean isEnableSelectByCriteria() {
+        return enableSelectByCriteria;
+    }
+
+    public void setEnableSelectByCriteria(boolean enableSelectByCriteria) {
+        this.enableSelectByCriteria = enableSelectByCriteria;
+    }
+
+    public boolean isEnableUpdateByPrimaryKey() {
+        return enableUpdateByPrimaryKey;
+    }
+
+    public void setEnableUpdateByPrimaryKey(boolean enableUpdateByPrimaryKey) {
+        this.enableUpdateByPrimaryKey = enableUpdateByPrimaryKey;
+    }
+
+    public boolean isEnableUpdateByPrimaryKeySelective() {
+        return enableUpdateByPrimaryKeySelective;
+    }
+
+    public void setEnableUpdateByPrimaryKeySelective(boolean enableUpdateByPrimaryKeySelective) {
+        this.enableUpdateByPrimaryKeySelective = enableUpdateByPrimaryKeySelective;
+    }
+
+    public boolean isEnableDeleteByPrimaryKey() {
+        return enableDeleteByPrimaryKey;
+    }
+
+    public void setEnableDeleteByPrimaryKey(boolean enableDeleteByPrimaryKey) {
+        this.enableDeleteByPrimaryKey = enableDeleteByPrimaryKey;
+    }
+
+    public boolean isEnableDeleteByCriteria() {
+        return enableDeleteByCriteria;
+    }
+
+    public void setEnableDeleteByCriteria(boolean enableDeleteByCriteria) {
+        this.enableDeleteByCriteria = enableDeleteByCriteria;
+    }
+
+    public void setColumnOverrides(List<ColumnOverride> columnOverrides) {
+        this.columnOverrides = columnOverrides;
+    }
+
+    public Map<IgnoredColumn, Boolean> getIgnoredColumns() {
+        return ignoredColumns;
+    }
+
+    public void setIgnoredColumns(Map<IgnoredColumn, Boolean> ignoredColumns) {
+        this.ignoredColumns = ignoredColumns;
+    }
+
+    public boolean isWildcardEscapingEnabled() {
+        return wildcardEscapingEnabled;
+    }
+
+    public void setWildcardEscapingEnabled(boolean wildcardEscapingEnabled) {
+        this.wildcardEscapingEnabled = wildcardEscapingEnabled;
+    }
+
+    public boolean isDelimitIdentifiers() {
+        return delimitIdentifiers;
+    }
+
+    public void setDelimitIdentifiers(boolean delimitIdentifiers) {
+        this.delimitIdentifiers = delimitIdentifiers;
+    }
+
+    public DomainObjectRenamingRule getDomainObjectRenamingRule() {
+        return domainObjectRenamingRule;
+    }
+
+    public void setDomainObjectRenamingRule(DomainObjectRenamingRule domainObjectRenamingRule) {
+        this.domainObjectRenamingRule = domainObjectRenamingRule;
+    }
+
+    public ColumnRenamingRule getColumnRenamingRule() {
+        return columnRenamingRule;
+    }
+
+    public void setColumnRenamingRule(ColumnRenamingRule columnRenamingRule) {
+        this.columnRenamingRule = columnRenamingRule;
+    }
+
+    public boolean isAllColumnDelimitingEnabled() {
+        return isAllColumnDelimitingEnabled;
+    }
+
+    public void setAllColumnDelimitingEnabled(boolean allColumnDelimitingEnabled) {
+        isAllColumnDelimitingEnabled = allColumnDelimitingEnabled;
+    }
+
+    public String getMapperName() {
+        return mapperName;
+    }
+
+    public void setMapperName(String mapperName) {
+        this.mapperName = mapperName;
+    }
+
+    public String getSqlProviderName() {
+        return sqlProviderName;
+    }
+
+    public void setSqlProviderName(String sqlProviderName) {
+        this.sqlProviderName = sqlProviderName;
+    }
+
+    public List<IgnoredColumnPattern> getIgnoredColumnPatterns() {
+        return ignoredColumnPatterns;
+    }
+
+    public void setIgnoredColumnPatterns(List<IgnoredColumnPattern> ignoredColumnPatterns) {
+        this.ignoredColumnPatterns = ignoredColumnPatterns;
     }
 }

@@ -1,8 +1,6 @@
 package com.whaleread.codegen.api.ddl;
 
 import com.whaleread.codegen.db.ResultSetRow;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +9,6 @@ import java.util.List;
  * Table definition read from database metadata
  * Created by dolphin on 2018/1/13
  */
-@Getter
-@Setter
 public class DdlTableDefinition implements ResultSetRow {
     private final String catalog;
     private final String schema;
@@ -98,5 +94,65 @@ public class DdlTableDefinition implements ResultSetRow {
         }
         result.append(";\n");
         return result.toString();
+    }
+
+    public String getCatalog() {
+        return catalog;
+    }
+
+    public String getSchema() {
+        return schema;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isCatalogQuoted() {
+        return catalogQuoted;
+    }
+
+    public void setCatalogQuoted(boolean catalogQuoted) {
+        this.catalogQuoted = catalogQuoted;
+    }
+
+    public boolean isSchemaQuoted() {
+        return schemaQuoted;
+    }
+
+    public void setSchemaQuoted(boolean schemaQuoted) {
+        this.schemaQuoted = schemaQuoted;
+    }
+
+    public boolean isNameQuoted() {
+        return nameQuoted;
+    }
+
+    public void setNameQuoted(boolean nameQuoted) {
+        this.nameQuoted = nameQuoted;
+    }
+
+    public List<String> getPrimaryKeys() {
+        return primaryKeys;
+    }
+
+    public void setPrimaryKeys(List<String> primaryKeys) {
+        this.primaryKeys = primaryKeys;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public List<DdlColumnDefinition> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<DdlColumnDefinition> columns) {
+        this.columns = columns;
     }
 }

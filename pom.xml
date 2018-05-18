@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <properties>
         <javaparser.version>3.5.10</javaparser.version>
-        <lombok.version>1.16.18</lombok.version>
         <antlr.version>4.7.1</antlr.version>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,11 +55,6 @@
                 <groupId>com.github.javaparser</groupId>
                 <artifactId>javaparser-core</artifactId>
                 <version>${javaparser.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.antlr</groupId>
