@@ -27,6 +27,12 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getServiceType());
         TopLevelClass topLevelClass = new TopLevelClass(type);
         commentGenerator.addGeneratedAnnotation(topLevelClass, topLevelClass.getImportedTypes());
+        topLevelClass.addImportedType("org.springframework.transaction.annotation.Transactional");
+        if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
+            topLevelClass.addAnnotation("@Transactional(readOnly = true, transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
+        } else {
+            topLevelClass.addAnnotation("@Transactional(readOnly = true)");
+        }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.addImportedType(introspectedTable.getModelType());
         commentGenerator.addJavaFileComment(topLevelClass);
@@ -42,8 +48,6 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         commentGenerator.addGeneratedAnnotation(repositoryField, topLevelClass.getImportedTypes());
         topLevelClass.addImportedType("org.springframework.beans.factory.annotation.Autowired");
         topLevelClass.addField(repositoryField);
-
-        topLevelClass.addImportedType("org.springframework.transaction.annotation.Transactional");
 
         TableConfiguration tc = introspectedTable.getTableConfiguration();
         if (tc.isEnableSelectByPrimaryKey()) {
@@ -150,8 +154,8 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".insertSelective(record);";
         method.addBodyLine(sb);
-        if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("transactionManager"))) {
-            method.addAnnotation("@Transactional(transactionManager = \"" + introspectedTable.getTableConfiguration().getProperty("transactionManager") + "\")");
+        if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
+            method.addAnnotation("@Transactional(transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
         } else {
             method.addAnnotation("@Transactional");
         }
@@ -167,8 +171,8 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".updateByPrimaryKeySelective(record);";
         method.addBodyLine(sb);
-        if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("transactionManager"))) {
-            method.addAnnotation("@Transactional(transactionManager = \"" + introspectedTable.getTableConfiguration().getProperty("transactionManager") + "\")");
+        if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
+            method.addAnnotation("@Transactional(transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
         } else {
             method.addAnnotation("@Transactional");
         }
@@ -193,8 +197,8 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         }
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByPrimaryKey(" + repositoryParams.toString() + ");";
         method.addBodyLine(sb);
-        if (stringHasValue(introspectedTable.getTableConfiguration().getProperty("transactionManager"))) {
-            method.addAnnotation("@Transactional(transactionManager = \"" + introspectedTable.getTableConfiguration().getProperty("transactionManager") + "\")");
+        if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
+            method.addAnnotation("@Transactional(transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
         } else {
             method.addAnnotation("@Transactional");
         }
