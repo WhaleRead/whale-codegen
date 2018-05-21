@@ -23,7 +23,7 @@ import java.util.*;
  * Created by Dolphin on 2017/3/31
  */
 @SuppressWarnings({"unused", "WeakerAccess"})
-public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
+public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportSubclassBeanPropertyRowMapper<T> {
 
     private static final Logger logger = LoggerFactory.getLogger(AliasBeanPropertyRowMapper.class);
     /**
@@ -234,11 +234,17 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T> {
     @Override
     public T mapRow(ResultSet rs, int rowNumber) throws SQLException {
         Assert.state(this.mappedClass != null, "Mapped class was not specified");
-        T mappedObject = BeanUtils.instantiate(this.mappedClass);
-        return mapRow(mappedObject, rs, rowNumber);
+        return mapRow(rs, rowNumber, this.mappedClass);
     }
 
-    public <S extends T> S mapRow(S mappedObject, ResultSet rs, int rowNumber) throws SQLException {
+    @Override
+    public <S extends T> S mapRow(ResultSet rs, int rowNumber, Class<S> expectedClass) throws SQLException {
+        S mappedObject;
+        try {
+            mappedObject = expectedClass.newInstance();
+        } catch (Exception e) {
+            throw new SQLException("failed to instantiate class:" + expectedClass.getName(), e);
+        }
         BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(mappedObject);
         initBeanWrapper(bw);
 

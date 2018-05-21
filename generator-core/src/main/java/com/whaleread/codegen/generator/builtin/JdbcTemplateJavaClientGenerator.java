@@ -35,7 +35,6 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
  */
 public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
     private static final String ROW_MAPPER_TYPE_NAME = "org.springframework.jdbc.core.RowMapper";
-    private static final String PROPERTY_SHARDING = "sharding";
     private static final String PROPERTY_TABLE_NAME = "tableName";
 
     @Override
@@ -128,27 +127,29 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
 
     private void addRowMapperField(TopLevelClass topLevelClass) {
         Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
-        FullyQualifiedJavaType rowMapperType = new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME);
+        FullyQualifiedJavaType rowMapperType;
         String paramTypeName;
 //        if (introspectedTable.getTableConfiguration().isEnableDTO()) {
 //            paramTypeName = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + "DTO";
 //            rowMapperType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getDtoType()));
 //        } else {
         paramTypeName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
-        rowMapperType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getModelType()));
 //        }
-        importedTypes.add(new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME));
         Field field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
-        field.setType(rowMapperType);
         field.setName("rowMapper");
         if (stringHasValue(introspectedTable.getFullyQualifiedTable().getAlias())) {
+            rowMapperType = new FullyQualifiedJavaType(AliasBeanPropertyRowMapper.class.getName());
             importedTypes.add(new FullyQualifiedJavaType(AliasBeanPropertyRowMapper.class.getName()));
             field.setInitializationString("new AliasBeanPropertyRowMapper<>(" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_ALIAS, " + paramTypeName + ".class)");
         } else {
+            rowMapperType = new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME);
+            importedTypes.add(new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME));
             importedTypes.add(new FullyQualifiedJavaType("org.springframework.jdbc.core.BeanPropertyRowMapper"));
             field.setInitializationString("new BeanPropertyRowMapper<>(" + paramTypeName + ".class)");
         }
+        rowMapperType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getModelType()));
+        field.setType(rowMapperType);
         context.getCommentGenerator().addGeneratedAnnotation(field, importedTypes);
         if (context.getPlugins().clientRowMapperFieldGenerated(field, topLevelClass, introspectedTable)) {
             topLevelClass.addImportedTypes(importedTypes);

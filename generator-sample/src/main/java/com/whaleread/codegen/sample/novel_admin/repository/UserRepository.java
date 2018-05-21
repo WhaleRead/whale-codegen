@@ -10,7 +10,6 @@ import java.util.Optional;
 import javax.annotation.Generated;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -24,7 +23,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UserRepository extends NamedParameterJdbcDaoSupport {
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<User> rowMapper = new AliasBeanPropertyRowMapper<>(User.TABLE_ALIAS, User.class);
+    private AliasBeanPropertyRowMapper<User> rowMapper = new AliasBeanPropertyRowMapper<>(User.TABLE_ALIAS, User.class);
 
     @Autowired
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")

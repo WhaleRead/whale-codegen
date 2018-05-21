@@ -12,7 +12,6 @@ import javax.annotation.Generated;
 import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -26,7 +25,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class SooRepository extends NamedParameterJdbcDaoSupport {
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
-    private RowMapper<Soo> rowMapper = new AliasBeanPropertyRowMapper<>(Soo.TABLE_ALIAS, Soo.class);
+    private AliasBeanPropertyRowMapper<Soo> rowMapper = new AliasBeanPropertyRowMapper<>(Soo.TABLE_ALIAS, Soo.class);
 
     @Value("${sharding_count.soo}")
     private int shardingCount;
