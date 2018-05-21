@@ -15,6 +15,7 @@ import com.whaleread.codegen.config.TableConfiguration;
 import com.whaleread.codegen.generator.AbstractJavaGenerator;
 import com.whaleread.codegen.runtime.jdbc.Criteria;
 import com.whaleread.codegen.runtime.jdbc.spring.AliasBeanPropertyRowMapper;
+import com.whaleread.codegen.runtime.jdbc.spring.GenericBeanPropertyRowMapper;
 
 import javax.annotation.Generated;
 import javax.sql.DataSource;
@@ -35,7 +36,6 @@ import static com.whaleread.codegen.internal.util.messages.Messages.getString;
  * Created by Dolphin on 2018/3/23
  */
 public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
-    private static final String ROW_MAPPER_TYPE_NAME = "org.springframework.jdbc.core.RowMapper";
     private static final String PROPERTY_TABLE_NAME = "tableName";
 
     @Override
@@ -100,9 +100,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         }
         if (tableConfig.isEnableSelectByCriteria()) {
             addSelectByCriteriaMethod(topLevelClass);
-            if (stringHasValue(tableConfig.getAlias())) {
-                addSelectByCriteriaSubclassMethod(topLevelClass);
-            }
+            addSelectByCriteriaSubclassMethod(topLevelClass);
         }
 
         if (tableConfig.isEnableInsert()) {
@@ -147,10 +145,9 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             importedTypes.add(new FullyQualifiedJavaType(AliasBeanPropertyRowMapper.class.getName()));
             field.setInitializationString("new AliasBeanPropertyRowMapper<>(" + introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_ALIAS, " + paramTypeName + ".class)");
         } else {
-            rowMapperType = new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME);
-            importedTypes.add(new FullyQualifiedJavaType(ROW_MAPPER_TYPE_NAME));
-            importedTypes.add(new FullyQualifiedJavaType("org.springframework.jdbc.core.BeanPropertyRowMapper"));
-            field.setInitializationString("new BeanPropertyRowMapper<>(" + paramTypeName + ".class)");
+            rowMapperType = new FullyQualifiedJavaType(GenericBeanPropertyRowMapper.class.getName());
+            importedTypes.add(new FullyQualifiedJavaType(GenericBeanPropertyRowMapper.class.getName()));
+            field.setInitializationString("new GenericBeanPropertyRowMapper<>(" + paramTypeName + ".class)");
         }
         rowMapperType.addTypeArgument(new FullyQualifiedJavaType(introspectedTable.getModelType()));
         field.setType(rowMapperType);

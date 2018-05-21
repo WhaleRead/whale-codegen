@@ -1,12 +1,19 @@
 package com.whaleread.codegen.runtime.jdbc.spring;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.NotWritablePropertyException;
+import org.springframework.beans.PropertyAccessorFactory;
+import org.springframework.beans.TypeMismatchException;
+import org.springframework.core.convert.ConversionService;
+import org.springframework.core.convert.support.DefaultConversionService;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
@@ -15,57 +22,48 @@ import java.beans.PropertyDescriptor;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
- * Modified from spring-jdbc:org.springframework.jdbc.core.BeanPropertyRowMapper<br>
- * Support column prefix.
- * Created by Dolphin on 2017/3/31
+ * A modified version from org.springframework.jdbc.core.BeanPropertyRowMapper, support generic types
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
-public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGenericBeanPropertyRowMapper<T> {
+public class GenericBeanPropertyRowMapper<T> implements SupportGenericBeanPropertyRowMapper<T> {
+    /** Logger available to subclasses */
+    protected final Log logger = LogFactory.getLog(getClass());
 
-    private static final Logger logger = LoggerFactory.getLogger(AliasBeanPropertyRowMapper.class);
-    /**
-     * The class we are mapping to
-     */
+    /** The class we are mapping to */
+    @Nullable
     private Class<T> mappedClass;
 
-    /**
-     * Whether we're strictly validating
-     */
+    /** Whether we're strictly validating */
     private boolean checkFullyPopulated = false;
 
-    /**
-     * Whether we're defaulting primitives when mapping a null value
-     */
+    /** Whether we're defaulting primitives when mapping a null value */
     private boolean primitivesDefaultedForNullValue = false;
 
-    /**
-     * Map of the fields we provide mapping for
-     */
+    /** ConversionService for binding JDBC values to bean properties */
+    @Nullable
+    private ConversionService conversionService = DefaultConversionService.getSharedInstance();
+
+    /** Map of the fields we provide mapping for */
+    @Nullable
     private Map<String, PropertyDescriptor> mappedFields;
 
-    /**
-     * Set of bean properties we provide mapping for
-     */
+    /** Set of bean properties we provide mapping for */
+    @Nullable
     private Set<String> mappedProperties;
 
-    private String alias;
-
-    private void setAlias(String alias) {
-        this.alias = alias + "_";
-    }
 
     /**
      * Create a new {@code BeanPropertyRowMapper} for bean-style configuration.
-     *
-     * @param alias the table alias
      * @see #setMappedClass
      * @see #setCheckFullyPopulated
      */
-    public AliasBeanPropertyRowMapper(String alias) {
-        setAlias(alias);
+    public GenericBeanPropertyRowMapper() {
     }
 
     /**
@@ -73,25 +71,19 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
      * properties in the target bean.
      * <p>Consider using the {@link #newInstance} factory method instead,
      * which allows for specifying the mapped type once only.
-     *
-     * @param alias       the table's alias
      * @param mappedClass the class that each row should be mapped to
      */
-    public AliasBeanPropertyRowMapper(String alias, Class<T> mappedClass) {
-        setAlias(alias);
+    public GenericBeanPropertyRowMapper(Class<T> mappedClass) {
         initialize(mappedClass);
     }
 
     /**
      * Create a new {@code BeanPropertyRowMapper}.
-     *
-     * @param alias               the table's alias
-     * @param mappedClass         the class that each row should be mapped to
+     * @param mappedClass the class that each row should be mapped to
      * @param checkFullyPopulated whether we're strictly validating that
-     *                            all bean properties have been mapped from corresponding database fields
+     * all bean properties have been mapped from corresponding database fields
      */
-    public AliasBeanPropertyRowMapper(String alias, Class<T> mappedClass, boolean checkFullyPopulated) {
-        setAlias(alias);
+    public GenericBeanPropertyRowMapper(Class<T> mappedClass, boolean checkFullyPopulated) {
         initialize(mappedClass);
         this.checkFullyPopulated = checkFullyPopulated;
     }
@@ -99,13 +91,12 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
 
     /**
      * Set the class that each row should be mapped to.
-     *
-     * @param mappedClass type of the mapped value
      */
     public void setMappedClass(Class<T> mappedClass) {
         if (this.mappedClass == null) {
             initialize(mappedClass);
-        } else {
+        }
+        else {
             if (this.mappedClass != mappedClass) {
                 throw new InvalidDataAccessApiUsageException("The mapped class can not be reassigned to map to " +
                         mappedClass + " since it is already providing mapping for " + this.mappedClass);
@@ -116,6 +107,7 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
     /**
      * Get the class that we are mapping to.
      */
+    @Nullable
     public final Class<T> getMappedClass() {
         return this.mappedClass;
     }
@@ -124,8 +116,6 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
      * Set whether we're strictly validating that all bean properties have been mapped
      * from corresponding database fields.
      * <p>Default is {@code false}, accepting unpopulated properties in the target bean.
-     *
-     * @param checkFullyPopulated whether we're strictly validating that all bean properties have been mapped
      */
     public void setCheckFullyPopulated(boolean checkFullyPopulated) {
         this.checkFullyPopulated = checkFullyPopulated;
@@ -156,10 +146,31 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
         return this.primitivesDefaultedForNullValue;
     }
 
+    /**
+     * Set a {@link ConversionService} for binding JDBC values to bean properties,
+     * or {@code null} for none.
+     * <p>Default is a {@link DefaultConversionService}, as of Spring 4.3. This
+     * provides support for {@code java.time} conversion and other special types.
+     * @since 4.3
+     * @see #initBeanWrapper(BeanWrapper)
+     */
+    public void setConversionService(@Nullable ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
+
+    /**
+     * Return a {@link ConversionService} for binding JDBC values to bean properties,
+     * or {@code null} if none.
+     * @since 4.3
+     */
+    @Nullable
+    public ConversionService getConversionService() {
+        return this.conversionService;
+    }
+
 
     /**
      * Initialize the mapping metadata for the given class.
-     *
      * @param mappedClass the mapped class
      */
     protected void initialize(Class<T> mappedClass) {
@@ -169,14 +180,10 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
         PropertyDescriptor[] pds = BeanUtils.getPropertyDescriptors(mappedClass);
         for (PropertyDescriptor pd : pds) {
             if (pd.getWriteMethod() != null) {
-                String lowerCaseName = lowerCaseName(pd.getName());
-                this.mappedFields.put(lowerCaseName, pd);
+                this.mappedFields.put(lowerCaseName(pd.getName()), pd);
                 String underscoredName = underscoreName(pd.getName());
-                if (!lowerCaseName.equals(underscoredName)) {
+                if (!lowerCaseName(pd.getName()).equals(underscoredName)) {
                     this.mappedFields.put(underscoredName, pd);
-                }
-                if (alias != null) {
-                    this.mappedFields.put(alias + underscoredName, pd);
                 }
                 this.mappedProperties.add(pd.getName());
             }
@@ -186,11 +193,10 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
     /**
      * Convert a name in camelCase to an underscored name in lower case.
      * Any upper case letters are converted to lower case with a preceding underscore.
-     *
      * @param name the original name
      * @return the converted name
-     * @see #lowerCaseName
      * @since 4.2
+     * @see #lowerCaseName
      */
     protected String underscoreName(String name) {
         if (!StringUtils.hasLength(name)) {
@@ -203,7 +209,8 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
             String slc = lowerCaseName(s);
             if (!s.equals(slc)) {
                 result.append("_").append(slc);
-            } else {
+            }
+            else {
                 result.append(s);
             }
         }
@@ -213,7 +220,6 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
     /**
      * Convert the given name to lower case.
      * By default, conversions will happen within the US locale.
-     *
      * @param name the original name
      * @return the converted name
      * @since 4.2
@@ -222,19 +228,59 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
         return name.toLowerCase(Locale.US);
     }
 
+    /**
+     * Initialize the given BeanWrapper to be used for row mapping.
+     * To be called for each row.
+     * <p>The default implementation applies the configured {@link ConversionService},
+     * if any. Can be overridden in subclasses.
+     * @param bw the BeanWrapper to initialize
+     * @see #getConversionService()
+     * @see BeanWrapper#setConversionService
+     */
+    protected void initBeanWrapper(BeanWrapper bw) {
+        ConversionService cs = getConversionService();
+        if (cs != null) {
+            bw.setConversionService(cs);
+        }
+    }
+
+    /**
+     * Retrieve a JDBC object value for the specified column.
+     * <p>The default implementation calls
+     * {@link JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)}.
+     * Subclasses may override this to check specific value types upfront,
+     * or to post-process values return from {@code getResultSetValue}.
+     * @param rs is the ResultSet holding the data
+     * @param index is the column index
+     * @param pd the bean property that each result object is expected to match
+     * @return the Object value
+     * @throws SQLException in case of extraction failure
+     * @see org.springframework.jdbc.support.JdbcUtils#getResultSetValue(java.sql.ResultSet, int, Class)
+     */
+    @Nullable
+    protected Object getColumnValue(ResultSet rs, int index, PropertyDescriptor pd) throws SQLException {
+        return JdbcUtils.getResultSetValue(rs, index, pd.getPropertyType());
+    }
+
+
+    /**
+     * Static factory method to create a new {@code BeanPropertyRowMapper}
+     * (with the mapped class specified only once).
+     * @param mappedClass the class that each row should be mapped to
+     */
+    public static <T> BeanPropertyRowMapper<T> newInstance(Class<T> mappedClass) {
+        return new BeanPropertyRowMapper<>(mappedClass);
+    }
 
     /**
      * Extract the values for all columns in the current row.
      * <p>Utilizes public setters and result set metadata.
-     *
-     * @param rs        ResultSet
-     * @param rowNumber the row number
-     * @see ResultSetMetaData
+     * @see java.sql.ResultSetMetaData
      */
     @Override
     public T mapRow(ResultSet rs, int rowNumber) throws SQLException {
-        Assert.state(this.mappedClass != null, "Mapped class was not specified");
-        return mapRow(rs, rowNumber, this.mappedClass);
+        Assert.state(mappedClass != null, "Mapped class was not specified");
+        return mapRow(rs, rowNumber, mappedClass);
     }
 
     @Override
@@ -243,7 +289,7 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
         try {
             mappedObject = expectedType.newInstance();
         } catch (Exception e) {
-            throw new SQLException("failed to instantiate class:" + expectedType.getName(), e);
+            throw new SQLException("Failed to instantiate class:" + expectedType.getName(), e);
         }
         BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(mappedObject);
         initBeanWrapper(bw);
@@ -255,37 +301,41 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
         for (int index = 1; index <= columnCount; index++) {
             String column = JdbcUtils.lookupColumnName(rsmd, index);
             String field = lowerCaseName(column.replaceAll(" ", ""));
-            PropertyDescriptor pd = this.mappedFields.get(field);
+            PropertyDescriptor pd = (this.mappedFields != null ? this.mappedFields.get(field) : null);
             if (pd != null) {
                 try {
                     Object value = getColumnValue(rs, index, pd);
                     if (rowNumber == 0 && logger.isDebugEnabled()) {
                         logger.debug("Mapping column '" + column + "' to property '" + pd.getName() +
-                                "' of type [" + ClassUtils.getQualifiedName(pd.getPropertyType()) + "]");
+                                "' of type '" + ClassUtils.getQualifiedName(pd.getPropertyType()) + "'");
                     }
                     try {
                         bw.setPropertyValue(pd.getName(), value);
-                    } catch (TypeMismatchException ex) {
+                    }
+                    catch (TypeMismatchException ex) {
                         if (value == null && this.primitivesDefaultedForNullValue) {
                             if (logger.isDebugEnabled()) {
                                 logger.debug("Intercepted TypeMismatchException for row " + rowNumber +
                                         " and column '" + column + "' with null value when setting property '" +
-                                        pd.getName() + "' of type [" +
+                                        pd.getName() + "' of type '" +
                                         ClassUtils.getQualifiedName(pd.getPropertyType()) +
-                                        "] on object: " + mappedObject, ex);
+                                        "' on object: " + mappedObject, ex);
                             }
-                        } else {
+                        }
+                        else {
                             throw ex;
                         }
                     }
                     if (populatedProperties != null) {
                         populatedProperties.add(pd.getName());
                     }
-                } catch (NotWritablePropertyException ex) {
+                }
+                catch (NotWritablePropertyException ex) {
                     throw new DataRetrievalFailureException(
                             "Unable to map column '" + column + "' to property '" + pd.getName() + "'", ex);
                 }
-            } else {
+            }
+            else {
                 // No PropertyDescriptor found
                 if (rowNumber == 0 && logger.isDebugEnabled()) {
                     logger.debug("No property found for column '" + column + "' mapped to field '" + field + "'");
@@ -301,47 +351,4 @@ public class AliasBeanPropertyRowMapper<T> implements RowMapper<T>, SupportGener
 
         return mappedObject;
     }
-
-    /**
-     * Initialize the given BeanWrapper to be used for row mapping.
-     * To be called for each row.
-     * <p>The default implementation is empty. Can be overridden in subclasses.
-     *
-     * @param bw the BeanWrapper to initialize
-     */
-    protected void initBeanWrapper(BeanWrapper bw) {
-    }
-
-    /**
-     * Retrieve a JDBC object value for the specified column.
-     * <p>The default implementation calls
-     * {@link JdbcUtils#getResultSetValue(ResultSet, int, Class)}.
-     * Subclasses may override this to check specific value types upfront,
-     * or to post-process values return from {@code getResultSetValue}.
-     *
-     * @param rs    is the ResultSet holding the data
-     * @param index is the column index
-     * @param pd    the bean property that each result object is expected to match
-     *              (or {@code null} if none specified)
-     * @return the Object value
-     * @throws SQLException in case of extraction failure
-     * @see JdbcUtils#getResultSetValue(ResultSet, int, Class)
-     */
-    protected Object getColumnValue(ResultSet rs, int index, PropertyDescriptor pd) throws SQLException {
-        return JdbcUtils.getResultSetValue(rs, index, pd.getPropertyType());
-    }
-
-
-    /**
-     * Static factory method to create a new {@code BeanPropertyRowMapper}
-     * (with the mapped class specified only once).
-     *
-     * @param alias       the table's alias
-     * @param mappedClass the class that each row should be mapped to
-     * @return new instance of this class
-     */
-    public static <T> AliasBeanPropertyRowMapper<T> newInstance(String alias, Class<T> mappedClass) {
-        return new AliasBeanPropertyRowMapper<>(alias, mappedClass);
-    }
-
 }

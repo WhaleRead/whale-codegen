@@ -10,6 +10,6 @@ import java.sql.SQLException;
  *
  * @author Dolphin
  */
-public interface SupportSubclassBeanPropertyRowMapper<T> extends RowMapper<T> {
-    <S extends T> S mapRow(ResultSet rs, int rowNumber, Class<S> expectedClass) throws SQLException;
+public interface SupportGenericBeanPropertyRowMapper<T> extends RowMapper<T> {
+    <S extends T> S mapRow(ResultSet rs, int rowNumber, Class<S> expectedType) throws SQLException;
 }
