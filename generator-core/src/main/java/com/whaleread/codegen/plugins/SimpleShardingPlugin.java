@@ -98,6 +98,11 @@ public class SimpleShardingPlugin extends PluginAdapter {
     }
 
     @Override
+    public boolean clientSelectByCriteriaSubclassMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return process(method, topLevelClass, introspectedTable);
+    }
+
+    @Override
     public boolean clientDeleteByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return process(method, topLevelClass, introspectedTable);
     }
@@ -114,7 +119,7 @@ public class SimpleShardingPlugin extends PluginAdapter {
             return true;
         }
         String shardingCountKey = introspectedTable.getTableConfigurationProperty("shardingCountKey");
-        if(!stringHasValue(shardingCountKey)) {
+        if (!stringHasValue(shardingCountKey)) {
             return true;
         }
         Field shardingCountField = new Field("shardingCount", FullyQualifiedJavaType.getIntInstance());

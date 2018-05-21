@@ -10,6 +10,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>generator-sample</artifactId>
+    <properties>
+        <skipCodegen>true</skipCodegen>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.whaleread.codegen</groupId>
@@ -42,40 +45,32 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>com.whaleread.codegen</groupId>
+                <artifactId>whale-generator-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>Whale Code Generator</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skipCodegen}</skip>
+                    <merge>true</merge>
+                    <includeAllDependencies>true</includeAllDependencies>
+                    <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-jdbc</artifactId>
+                        <version>${spring.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>codegen</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.whaleread.codegen</groupId>
-                        <artifactId>whale-generator-maven-plugin</artifactId>
-                        <version>${project.version}</version>
-                        <executions>
-                            <execution>
-                                <id>Whale Code Generator</id>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <merge>true</merge>
-                            <includeAllDependencies>true</includeAllDependencies>
-                            <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.springframework</groupId>
-                                <artifactId>spring-jdbc</artifactId>
-                                <version>${spring.version}</version>
-                            </dependency>
-                        </dependencies>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

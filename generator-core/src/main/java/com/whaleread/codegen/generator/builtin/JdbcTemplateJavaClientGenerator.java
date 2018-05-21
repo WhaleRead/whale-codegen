@@ -10,6 +10,7 @@ import com.whaleread.codegen.api.dom.java.JavaVisibility;
 import com.whaleread.codegen.api.dom.java.Method;
 import com.whaleread.codegen.api.dom.java.Parameter;
 import com.whaleread.codegen.api.dom.java.TopLevelClass;
+import com.whaleread.codegen.api.dom.java.TypeParameter;
 import com.whaleread.codegen.config.TableConfiguration;
 import com.whaleread.codegen.generator.AbstractJavaGenerator;
 import com.whaleread.codegen.runtime.jdbc.Criteria;
@@ -99,6 +100,9 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         }
         if (tableConfig.isEnableSelectByCriteria()) {
             addSelectByCriteriaMethod(topLevelClass);
+            if (stringHasValue(tableConfig.getAlias())) {
+                addSelectByCriteriaSubclassMethod(topLevelClass);
+            }
         }
 
         if (tableConfig.isEnableInsert()) {
@@ -435,6 +439,36 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         importedTypes.add(new FullyQualifiedJavaType(List.class.getName()));
         if (context.getPlugins().clientSelectByCriteriaMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
+    }
+
+    private void addSelectByCriteriaSubclassMethod(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+        importedTypes.add(new FullyQualifiedJavaType(Map.class.getName()));
+        importedTypes.add(new FullyQualifiedJavaType(HashMap.class.getName()));
+        String objectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        Method method = new Method("selectByCriteria");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        String alias = introspectedTable.getFullyQualifiedTable().getAlias();
+        boolean hasAlias = stringHasValue(alias);
+        FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
+        method.addParameter(new Parameter(criteriaType, "criteria"));
+        method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "offset"));
+        method.addParameter(new Parameter(FullyQualifiedJavaType.getIntInstance(), "count"));
+
+        FullyQualifiedJavaType classType = new FullyQualifiedJavaType("java.lang.Class<T>");
+        method.addParameter(new Parameter(classType, "expectedType"));
+//        addExtraParams(method);
+        method.addBodyLine("Map<String, Object> params = criteria.toSql();");
+        method.addBodyLine("return getNamedParameterJdbcTemplate().query(\"SELECT \" + " + objectName + (hasAlias ? ".ALIASED_BASE_COLUMNS" : ".BASE_COLUMNS") + " + \" FROM \" + " + introspectedTable.getAttribute(PROPERTY_TABLE_NAME) + " + \" " + (hasAlias ? alias : "") + " \" + criteria.getWhereClause() + criteria.getOrderByClause() + \" LIMIT \" + offset + ',' + count, params, (rs, rowNum) -> rowMapper.mapRow(rs, rowNum, expectedType));");
+        method.addTypeParameter(new TypeParameter("T", Collections.singletonList(new FullyQualifiedJavaType(introspectedTable.getModelType()))));
+        FullyQualifiedJavaType returnType = new FullyQualifiedJavaType(List.class.getName() + "<T>");
+        method.setReturnType(returnType);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        importedTypes.add(new FullyQualifiedJavaType(List.class.getName()));
+        if (context.getPlugins().clientSelectByCriteriaSubclassMethodGenerated(method, topLevelClass, introspectedTable)) {
             topLevelClass.addImportedTypes(importedTypes);
             topLevelClass.addMethod(method);
         }

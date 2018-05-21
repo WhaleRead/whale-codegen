@@ -49,6 +49,12 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    public <T extends User> List<T> selectByCriteria(Criteria criteria, int offset, int count, Class<T> expectedType) {
+        Map<String, Object> params = criteria.toSql();
+        return getNamedParameterJdbcTemplate().query("SELECT " + User.ALIASED_BASE_COLUMNS + " FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, (rs, rowNum) -> rowMapper.mapRow(rs, rowNum, expectedType));
+    }
+
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void insert(User record) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", record.getUsername());
