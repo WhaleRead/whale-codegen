@@ -56,6 +56,7 @@ public class SimpleShardingPlugin extends PluginAdapter {
         if (stringHasValue(shardingColumn)) {
             data.originalTableName = introspectedTable.getFullyQualifiedTable().getDomainObjectName() + ".TABLE_NAME";
             data.shardingTableName = shardingTableName.replace("{tableName}", data.originalTableName);
+            data.shardingTableName = data.shardingTableName.replace("{shardingColumnParameter}", column.getJavaProperty());
         }
         String importedTypes = getProperties().getProperty("importedTypes");
         if (stringHasValue(importedTypes)) {
