@@ -10,6 +10,7 @@
             <property name="importedTypes" value="com.whaleread.codegen.sample.novel_admin.ShardingUtils"/>
             <property name="shardingTableName" value="{tableName}+ ShardingUtils.nodeSuffix(userId, shardingCount)"/>
         </plugin>
+        <plugin type="com.whaleread.codegen.plugins.CommonsLang3ReflectionPlugin"/>
         <commentGenerator>
             <property name="suppressDate" value="true"/>
             <property name="addRemarkComments" value="true"/>

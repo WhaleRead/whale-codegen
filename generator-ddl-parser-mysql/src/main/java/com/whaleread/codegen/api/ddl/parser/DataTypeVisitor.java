@@ -18,8 +18,10 @@ public class DataTypeVisitor extends MySqlParserBaseVisitor<Void> {
     @Override
     public Void visitStringDataType(MySqlParser.StringDataTypeContext ctx) {
         column.setOriginType(ctx.typeName.getText());
-        int size = Integer.parseInt(ctx.lengthOneDimension().decimalLiteral().getText());
-        column.setSize(size);
+        if(ctx.lengthOneDimension() != null) {
+            int size = Integer.parseInt(ctx.lengthOneDimension().decimalLiteral().getText());
+            column.setSize(size);
+        }
         return null;
     }
 

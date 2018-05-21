@@ -1707,4 +1707,8 @@ public interface Plugin {
     default boolean serviceDeleteByIdMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return true;
     }
+
+    default boolean dtoClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return true;
+    }
 }

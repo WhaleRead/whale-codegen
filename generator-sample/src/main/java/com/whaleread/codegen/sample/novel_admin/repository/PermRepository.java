@@ -20,37 +20,36 @@ import org.springframework.stereotype.Repository;
 /**
  * table: novel_admin.perm
  */
-@Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.perm")
+@Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.perm")
 @Repository
 public class PermRepository extends NamedParameterJdbcDaoSupport {
-
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     private RowMapper<Perm> rowMapper = new BeanPropertyRowMapper<>(Perm.class);
 
     @Autowired
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void inject(DataSource dataSource) {
         super.setDataSource(dataSource);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public Optional<Perm> selectByPrimaryKey(Long id) {
-        return getJdbcTemplate().query("SELECT " + Perm.BASE_COLUMNS + " FROM " + Perm.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
+        return getJdbcTemplate().query("SELECT " + Perm.BASE_COLUMNS + " FROM " + Perm.TABLE_NAME + " WHERE id = ? ", new Object[]{id}, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Perm.TABLE_NAME + "  " + criteria.getWhereClause(), params, int.class);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public List<Perm> selectByCriteria(Criteria criteria, int offset, int count) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + Perm.BASE_COLUMNS + " FROM " + Perm.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void insert(Perm record) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", record.getName());
@@ -62,7 +61,7 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
         record.setId(keyHolder.getKey().longValue());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void insertSelective(Perm record) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder columnsFragment = new StringBuilder();
@@ -106,7 +105,7 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
         record.setId(keyHolder.getKey().longValue());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void updateByPrimaryKeySelective(Perm record) {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
@@ -142,12 +141,12 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
         getNamedParameterJdbcTemplate().update("UPDATE " + Perm.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public int deleteByPrimaryKey(Long id) {
         return getJdbcTemplate().update("DELETE FROM " + Perm.TABLE_NAME + " WHERE id = ? ", id);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void deleteByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         getNamedParameterJdbcTemplate().update("DELETE FROM " + Perm.TABLE_NAME + ' ' + criteria.getWhereClause(), params);

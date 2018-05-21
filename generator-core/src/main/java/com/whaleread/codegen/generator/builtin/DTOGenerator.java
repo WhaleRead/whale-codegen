@@ -40,7 +40,7 @@ public class DTOGenerator extends AbstractJavaGenerator {
 //        topLevelClass.addImportedType(modelType);
 
         List<CompilationUnit> answer = new ArrayList<CompilationUnit>();
-        if (context.getPlugins().modelBaseRecordClassGenerated(topLevelClass,
+        if (context.getPlugins().dtoClassGenerated(topLevelClass,
                 introspectedTable)) {
             answer.add(topLevelClass);
         }
