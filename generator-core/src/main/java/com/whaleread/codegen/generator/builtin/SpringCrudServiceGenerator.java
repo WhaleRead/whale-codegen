@@ -180,9 +180,9 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".insertSelective(record);";
         method.addBodyLine(sb);
         if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
-            method.addAnnotation("@Transactional(transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
+            method.addAnnotation("@Transactional(readOnly = false, transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
         } else {
-            method.addAnnotation("@Transactional");
+            method.addAnnotation("@Transactional(readOnly = false)");
         }
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         if (context.getPlugins().serviceSaveMethodGenerated(method, topLevelClass, introspectedTable)) {
@@ -201,9 +201,9 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".updateByPrimaryKeySelective(record);";
         method.addBodyLine(sb);
         if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
-            method.addAnnotation("@Transactional(transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
+            method.addAnnotation("@Transactional(readOnly = false, transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
         } else {
-            method.addAnnotation("@Transactional");
+            method.addAnnotation("@Transactional(readOnly = false)");
         }
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         if (context.getPlugins().serviceUpdateMethodGenerated(method, topLevelClass, introspectedTable)) {
@@ -224,9 +224,9 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByPrimaryKey(" + repositoryParams.toString() + ");";
         method.addBodyLine(sb);
         if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
-            method.addAnnotation("@Transactional(transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
+            method.addAnnotation("@Transactional(readOnly = false, transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
         } else {
-            method.addAnnotation("@Transactional");
+            method.addAnnotation("@Transactional(readOnly = false)");
         }
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         if (context.getPlugins().serviceDeleteByIdMethodGenerated(method, topLevelClass, introspectedTable)) {
