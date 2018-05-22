@@ -40,6 +40,11 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public <T extends Role> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType) {
+        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
+    }
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause(), params, int.class);

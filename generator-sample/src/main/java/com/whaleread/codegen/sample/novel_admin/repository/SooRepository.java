@@ -43,6 +43,11 @@ public class SooRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public <T extends Soo> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType) {
+        return getJdbcTemplate().query("SELECT " + Soo.BASE_COLUMNS + " FROM " + Soo.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
+    }
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria, Long userId) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Soo.TABLE_NAME + ShardingUtils.nodeSuffix(userId, shardingCount) + " s " + criteria.getWhereClause(), params, int.class);

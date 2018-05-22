@@ -785,6 +785,21 @@ public final class PluginAggregator implements Plugin {
     }
 
     @Override
+    public boolean clientSelectByPrimaryKeySubclassMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (Plugin plugin : plugins) {
+            if (!plugin.clientSelectByPrimaryKeySubclassMethodGenerated(method,
+                    topLevelClass, introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
+
+    @Override
     public boolean clientUpdateByExampleSelectiveMethodGenerated(Method method,
                                                                  Interface interfaze, IntrospectedTable introspectedTable) {
         boolean rc = true;

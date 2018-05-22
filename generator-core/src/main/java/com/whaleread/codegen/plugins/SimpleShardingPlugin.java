@@ -70,47 +70,47 @@ public class SimpleShardingPlugin extends PluginAdapter {
 
     @Override
     public boolean clientSelectByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientUpdateByPrimaryKeySelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientInsertSelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientInsertMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientCountByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientSelectByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientSelectByCriteriaSubclassMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientDeleteByPrimaryKeyMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
     public boolean clientDeleteByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-        return process(method, topLevelClass, introspectedTable);
+        return processClient(method, topLevelClass, introspectedTable);
     }
 
     @Override
@@ -131,7 +131,66 @@ public class SimpleShardingPlugin extends PluginAdapter {
         return true;
     }
 
-    private boolean process(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+    @Override
+    public boolean serviceFindByIdMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, ".selectByPrimaryKey(id);", ".selectByPrimaryKey(id, {shardingColumnParameter});");
+    }
+
+    @Override
+    public boolean serviceCountByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, ".countByCriteria(criteria);", ".countByCriteria(criteria, {shardingColumnParameter});");
+    }
+
+    @Override
+    public boolean serviceFindByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, ".selectByCriteria(criteria, offset, limit);", ".selectByCriteria(criteria, offset, limit, {shardingColumnParameter});");
+    }
+
+    @Override
+    public boolean serviceSaveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, ".insertSelective(record);", ".insertSelective(record, {shardingColumnParameter});");
+    }
+
+    @Override
+    public boolean serviceUpdateMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, ".updateByPrimaryKeySelective(record);", ".updateByPrimaryKeySelective(record, {shardingColumnParameter});");
+    }
+
+    @Override
+    public boolean serviceDeleteByIdMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, "chapterRepository.deleteByPrimaryKey(id);", "chapterRepository.deleteByPrimaryKey(id, {shardingColumnParameter});");
+    }
+
+    private boolean processService(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String search, String replacement) {
+        PluginData data = getPluginData(introspectedTable);
+        if (data == null) {
+            return true;
+        }
+        if (data.shardingColumnParameter != null) {
+            boolean columnParamExists = false;
+            for (Parameter parameter : method.getParameters()) {
+                if (parameter.getName().equals(data.shardingColumnParameter.getName())) {
+                    columnParamExists = true;
+                    break;
+                }
+            }
+            if (!columnParamExists) {
+                method.addParameter(data.shardingColumnParameter);
+            }
+        }
+        if (data.shardingTableName != null) {
+            String bodyLine;
+            for (int i = 0; i < method.getBodyLines().size(); i++) {
+                if ((bodyLine = method.getBodyLines().get(i)).contains(search)) {
+                    method.getBodyLines().set(i, bodyLine.replace(search, replacement.replace("{shardingColumnParameter}", data.shardingColumnParameter.getName())));
+                    break;
+                }
+            }
+        }
+        return true;
+    }
+
+    private boolean processClient(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         PluginData data = getPluginData(introspectedTable);
         if (data == null) {
             return true;

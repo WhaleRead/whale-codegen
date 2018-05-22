@@ -40,6 +40,11 @@ public class PermRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public <T extends Perm> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType) {
+        return getJdbcTemplate().query("SELECT " + Perm.BASE_COLUMNS + " FROM " + Perm.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
+    }
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Perm.TABLE_NAME + "  " + criteria.getWhereClause(), params, int.class);

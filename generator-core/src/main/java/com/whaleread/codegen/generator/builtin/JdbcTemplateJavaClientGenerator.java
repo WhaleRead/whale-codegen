@@ -94,6 +94,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
 
         if (tableConfig.isEnableSelectByPrimaryKey()) {
             addSelectByPrimaryKeyMethod(topLevelClass);
+            addSelectByPrimaryKeySubclassMethod(topLevelClass);
         }
         if (tableConfig.isEnableCountByCriteria()) {
             addCountByCriteriaMethod(topLevelClass);
@@ -226,6 +227,54 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
         method.addBodyLine(sb);
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         if (context.getPlugins().clientSelectByPrimaryKeyMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
+    }
+
+    private void addSelectByPrimaryKeySubclassMethod(TopLevelClass topLevelClass) {
+        if (introspectedTable.getPrimaryKeyColumns().isEmpty()) {
+            return;
+        }
+        Set<FullyQualifiedJavaType> importedTypes = new TreeSet<>();
+        Method method = new Method("selectByPrimaryKey");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        StringBuilder whereFragment = new StringBuilder();
+        StringBuilder valueFragment = new StringBuilder();
+        for (IntrospectedColumn column : introspectedTable.getPrimaryKeyColumns()) {
+            importedTypes.add(column.getFullyQualifiedJavaType());
+            method.addParameter(new Parameter(column.getFullyQualifiedJavaType(), column.getJavaProperty()));
+            whereFragment.append(column.getColumnName()).append(" = ? AND ");
+            valueFragment.append(column.getJavaProperty()).append(", ");
+        }
+
+        whereFragment.setLength(whereFragment.length() - 4);
+        valueFragment.setLength(valueFragment.length() - 2);
+        String domainObjectName = introspectedTable.getFullyQualifiedTable().getDomainObjectName();
+        boolean nonNullEnabled = context.getBuiltInGeneratorConfiguration().isEnableNonNull();
+
+        FullyQualifiedJavaType classType = new FullyQualifiedJavaType("java.lang.Class<T>");
+        method.addParameter(new Parameter(classType, "expectedType"));
+//        addExtraParams(method);
+        method.addTypeParameter(new TypeParameter("T", Collections.singletonList(new FullyQualifiedJavaType(introspectedTable.getModelType()))));
+        if (nonNullEnabled) {
+            importedTypes.add(new FullyQualifiedJavaType("java.util.Optional"));
+            method.setReturnType(new FullyQualifiedJavaType("java.util.Optional<T>"));
+        } else {
+            method.setReturnType(new FullyQualifiedJavaType("T"));
+        }
+        String sb = "return getJdbcTemplate().query(\"SELECT \" + " +
+                domainObjectName +
+                ".BASE_COLUMNS + \" FROM \" + " +
+                introspectedTable.getAttribute(PROPERTY_TABLE_NAME) +
+                " + \" WHERE " +
+                whereFragment +
+                "\", new Object[]{" +
+                valueFragment +
+                "}, rs -> rs.next() ? " + (nonNullEnabled ? "Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());" : "rowMapper.mapRow(rs, 0, expectedType) : null);");
+        method.addBodyLine(sb);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().clientSelectByPrimaryKeySubclassMethodGenerated(method, topLevelClass, introspectedTable)) {
             topLevelClass.addImportedTypes(importedTypes);
             topLevelClass.addMethod(method);
         }
