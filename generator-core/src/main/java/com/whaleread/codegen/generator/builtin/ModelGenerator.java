@@ -209,11 +209,20 @@ public class ModelGenerator extends AbstractJavaGenerator {
         for (IntrospectedColumn introspectedColumn : columns) {
             Field columnNameField = new Field("COLUMN_" + introspectedColumn.getActualColumnName().toUpperCase(), FullyQualifiedJavaType.getStringInstance());
             publicStaticFinal(columnNameField);
-            columnNameField.setInitializationString("\"" + introspectedColumn.getColumnName() + "\"");
+            columnNameField.setInitializationString("\"" + introspectedColumn.getActualColumnName() + "\"");
             context.getCommentGenerator().addGeneratedAnnotation(columnNameField, topLevelClass.getImportedTypes());
             context.getCommentGenerator().addFieldComment(columnNameField,
                     introspectedTable, introspectedColumn);
             topLevelClass.addField(columnNameField);
+            if(introspectedColumn.isColumnNameDelimited()) {
+                Field quotedColumnNameField = new Field("COLUMN_" + introspectedColumn.getActualColumnName().toUpperCase() + "_QUOTED", FullyQualifiedJavaType.getStringInstance());
+                publicStaticFinal(quotedColumnNameField);
+                quotedColumnNameField.setInitializationString("\"" + introspectedColumn.getColumnName() + "\"");
+                context.getCommentGenerator().addGeneratedAnnotation(quotedColumnNameField, topLevelClass.getImportedTypes());
+                context.getCommentGenerator().addFieldComment(quotedColumnNameField,
+                        introspectedTable, introspectedColumn);
+                topLevelClass.addField(quotedColumnNameField);
+            }
         }
     }
 

@@ -1,9 +1,20 @@
 package com.whaleread.codegen.sample.novel_admin;
 
 /**
- * Created by Dolphin on 2018/4/9
+ * @author Dolphin
  */
 public class ShardingUtils {
+    /**
+     * 计算分表节点
+     *
+     * @param shardingValue 分表字段值
+     * @param tableCount    分表数
+     * @return 分表节点
+     */
+    public static int node(long shardingValue, int tableCount) {
+        return (int) (shardingValue % tableCount);
+    }
+
     /**
      * 计算分表后缀，小于100
      *
@@ -16,6 +27,16 @@ public class ShardingUtils {
             return "";
         }
         long node = shardingValue % tableCount;
+        return node < 10 ? ("_0" + node) : ("_" + node);
+    }
+
+    /**
+     * 主要特点分表后缀
+     *
+     * @param node 节点索引
+     * @return 分表后缀
+     */
+    public static String nodeSuffix(int node) {
         return node < 10 ? ("_0" + node) : ("_" + node);
     }
 }

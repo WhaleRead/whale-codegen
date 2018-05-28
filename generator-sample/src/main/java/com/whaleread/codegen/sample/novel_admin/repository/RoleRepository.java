@@ -15,54 +15,51 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcDaoSupport;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.RowMapper;
 
 /**
  * table: novel_admin.role
  */
-@Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.role")
+@Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.role")
 @Repository
 public class RoleRepository extends NamedParameterJdbcDaoSupport {
-
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     private GenericBeanPropertyRowMapper<Role> rowMapper = new GenericBeanPropertyRowMapper<>(Role.class);
 
     @Autowired
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void inject(DataSource dataSource) {
         super.setDataSource(dataSource);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public Optional<Role> selectByPrimaryKey(Long id) {
-        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
+        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[]{id}, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public <T extends Role> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType) {
-        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
+        return getJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + " WHERE id = ? ", new Object[]{id}, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause(), params, int.class);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public List<Role> selectByCriteria(Criteria criteria, int offset, int count) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public <T extends Role> List<T> selectByCriteria(Criteria criteria, int offset, int count, Class<T> expectedType) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + Role.BASE_COLUMNS + " FROM " + Role.TABLE_NAME + "  " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, (rs, rowNum) -> rowMapper.mapRow(rs, rowNum, expectedType));
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void insert(Role record) {
         Map<String, Object> params = new HashMap<>();
         params.put("name", record.getName());
@@ -73,7 +70,7 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
         record.setId(keyHolder.getKey().longValue());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void insertSelective(Role record) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder columnsFragment = new StringBuilder();
@@ -112,7 +109,7 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
         record.setId(keyHolder.getKey().longValue());
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void updateByPrimaryKeySelective(Role record) {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
@@ -144,12 +141,12 @@ public class RoleRepository extends NamedParameterJdbcDaoSupport {
         getNamedParameterJdbcTemplate().update("UPDATE " + Role.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public int deleteByPrimaryKey(Long id) {
         return getJdbcTemplate().update("DELETE FROM " + Role.TABLE_NAME + " WHERE id = ? ", id);
     }
 
-    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
     public void deleteByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         getNamedParameterJdbcTemplate().update("DELETE FROM " + Role.TABLE_NAME + ' ' + criteria.getWhereClause(), params);
