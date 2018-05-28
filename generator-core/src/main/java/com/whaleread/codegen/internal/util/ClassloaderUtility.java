@@ -47,8 +47,9 @@ public class ClassloaderUtility {
             for (String classPathEntry : entries) {
                 file = new File(classPathEntry);
                 if (!file.exists()) {
-                    throw new RuntimeException(Messages.getString(
-                            "RuntimeError.9", classPathEntry)); //$NON-NLS-1$
+//                    throw new RuntimeException(Messages.getString(
+//                            "RuntimeError.9", classPathEntry)); //$NON-NLS-1$
+                    continue;
                 }
 
                 try {
