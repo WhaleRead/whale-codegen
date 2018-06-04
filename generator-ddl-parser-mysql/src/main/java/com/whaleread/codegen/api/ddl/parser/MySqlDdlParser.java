@@ -100,6 +100,8 @@ public class MySqlDdlParser extends MySqlParserBaseListener implements DdlParser
             originType = "INTEGER";
         } else if("DATETIME".equals(originType)) {
             originType = "DATE";
+        } else if("TEXT".equals(originType)) {
+            originType = "CLOB";
         }
         column.setOriginType(originType);
         column.setType(JdbcTypeNameTranslator.getJdbcType(column.getOriginType()));
