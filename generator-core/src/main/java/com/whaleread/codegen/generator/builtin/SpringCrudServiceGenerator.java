@@ -247,6 +247,11 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         method.setVisibility(JavaVisibility.PUBLIC);
         String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByCriteria(criteria);";
         method.addBodyLine(sb);
+        if (stringHasValue(context.getBuiltInGeneratorConfiguration().getProperty("transactionManager"))) {
+            method.addAnnotation("@Transactional(readOnly = false, transactionManager = \"" + context.getBuiltInGeneratorConfiguration().getProperty("transactionManager") + "\")");
+        } else {
+            method.addAnnotation("@Transactional(readOnly = false)");
+        }
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         if (context.getPlugins().serviceDeleteByCriteriaMethodGenerated(method, topLevelClass, introspectedTable)) {
             topLevelClass.addImportedTypes(importedTypes);
