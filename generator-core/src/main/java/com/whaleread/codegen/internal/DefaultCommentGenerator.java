@@ -481,20 +481,20 @@ public class DefaultCommentGenerator implements CommentGenerator {
         if (suppressAllComments) {
             buffer.append('\"');
         } else {
-            buffer.append("value=\""); //$NON-NLS-1$
+            buffer.append("value = \""); //$NON-NLS-1$
         }
 
         buffer.append(name);
         buffer.append('\"');
 
         if (!suppressDate && !suppressAllComments) {
-            buffer.append(", date=\""); //$NON-NLS-1$
+            buffer.append(", date = \""); //$NON-NLS-1$
             buffer.append(DatatypeConverter.printDateTime(Calendar.getInstance()));
             buffer.append('\"');
         }
 
         if (!suppressAllComments && comment != null) {
-            buffer.append(", comments=\""); //$NON-NLS-1$
+            buffer.append(", comments = \""); //$NON-NLS-1$
             buffer.append(comment);
             buffer.append('\"');
         }
