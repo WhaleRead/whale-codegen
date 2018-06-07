@@ -161,6 +161,11 @@ public class SimpleShardingPlugin extends PluginAdapter {
         return processService(method, topLevelClass, introspectedTable, ".deleteByPrimaryKey(id);", ".deleteByPrimaryKey(id, {shardingColumnParameter});");
     }
 
+    @Override
+    public boolean serviceDeleteByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processService(method, topLevelClass, introspectedTable, ".deleteByCriteria(criteria);", ".deleteByCriteria(criteria, {shardingColumnParameter});");
+    }
+
     private boolean processService(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String search, String replacement) {
         PluginData data = getPluginData(introspectedTable);
         if (data == null) {

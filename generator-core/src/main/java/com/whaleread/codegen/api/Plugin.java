@@ -1500,6 +1500,10 @@ public interface Plugin {
         return true;
     }
 
+    default boolean serviceDeleteByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return true;
+    }
+
     default boolean dtoClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return true;
     }

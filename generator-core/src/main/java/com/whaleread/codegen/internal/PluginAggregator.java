@@ -1514,6 +1514,20 @@ public final class PluginAggregator implements Plugin {
     }
 
     @Override
+    public boolean serviceDeleteByCriteriaMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        boolean rc = true;
+
+        for (Plugin plugin : plugins) {
+            if (!plugin.serviceDeleteByCriteriaMethodGenerated(method, topLevelClass, introspectedTable)) {
+                rc = false;
+                break;
+            }
+        }
+
+        return rc;
+    }
+
+    @Override
     public boolean dtoClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         boolean rc = true;
 

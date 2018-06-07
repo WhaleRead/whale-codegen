@@ -76,6 +76,9 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         if (tc.isEnableDeleteByPrimaryKey()) {
             addDeleteByIdMethod(topLevelClass);
         }
+        if (tc.isEnableDeleteByCriteria()) {
+            addDeleteByCriteriaMethod(topLevelClass);
+        }
         return Collections.singletonList(topLevelClass);
     }
 
@@ -230,6 +233,22 @@ public class SpringCrudServiceGenerator extends AbstractJavaGenerator {
         }
         context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
         if (context.getPlugins().serviceDeleteByIdMethodGenerated(method, topLevelClass, introspectedTable)) {
+            topLevelClass.addImportedTypes(importedTypes);
+            topLevelClass.addMethod(method);
+        }
+    }
+
+    private void addDeleteByCriteriaMethod(TopLevelClass topLevelClass) {
+        Set<FullyQualifiedJavaType> importedTypes = new HashSet<>();
+        Method method = new Method("deleteByCriteria");
+        FullyQualifiedJavaType criteriaType = new FullyQualifiedJavaType(Criteria.class.getName());
+        importedTypes.add(criteriaType);
+        method.addParameter(new Parameter(criteriaType, "criteria"));
+        method.setVisibility(JavaVisibility.PUBLIC);
+        String sb = introspectedTable.getFullyQualifiedTable().getDomainObjectProperty() + context.getBuiltInGeneratorConfiguration().getDaoSuffix() + ".deleteByCriteria(criteria);";
+        method.addBodyLine(sb);
+        context.getCommentGenerator().addGeneratedAnnotation(method, importedTypes);
+        if (context.getPlugins().serviceDeleteByCriteriaMethodGenerated(method, topLevelClass, introspectedTable)) {
             topLevelClass.addImportedTypes(importedTypes);
             topLevelClass.addMethod(method);
         }
