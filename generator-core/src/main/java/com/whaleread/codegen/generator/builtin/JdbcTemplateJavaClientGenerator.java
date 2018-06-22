@@ -303,7 +303,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             whereFragment.append(column.getColumnName()).append(" = :").append(column.getJavaProperty()).append(" AND ");
         }
         whereFragment.setLength(whereFragment.length() - 4);
-        for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
+        for (IntrospectedColumn column : introspectedTable.getNonPrimaryKeyColumns()) {
             String getterMethodName = getGetterMethodName(column.getJavaProperty(), column.getFullyQualifiedJavaType());
             method.addBodyLine("if (record." + getterMethodName + "() != null) {");
             method.addBodyLine("fragment.append(\"" + column.getColumnName() + " = :" + column.getJavaProperty() + ", \");");
