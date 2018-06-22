@@ -8,243 +8,260 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 /**
  * Database Table Remarks:
- *   漫画订阅表
+ * 漫画订阅表
  *
  * <br/>
  * table: novel_admin.boo
  */
-@Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.boo")
+@Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.boo")
 public class Boo {
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
-    public static final String BASE_COLUMNS = "id, user_id, comic_id, issue_id, price, amount, coupon, product, channel, gmt_create, gmt_modify, ip";
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
-    public static final String ALIASED_BASE_COLUMNS = "b.id AS b_id, b.user_id AS b_user_id, b.comic_id AS b_comic_id, b.issue_id AS b_issue_id, b.price AS b_price, b.amount AS b_amount, b.coupon AS b_coupon, b.product AS b_product, b.channel AS b_channel, b.gmt_create AS b_gmt_create, b.gmt_modify AS b_gmt_modify, b.ip AS b_ip";
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public static final String BASE_COLUMNS = "id, user_id, comic_id, issue_id, price, amount, coupon, product, channel, gmt_create, gmt_modify, ip, remark";
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public static final String ALIASED_BASE_COLUMNS = "b.id AS b_id, b.user_id AS b_user_id, b.comic_id AS b_comic_id, b.issue_id AS b_issue_id, b.price AS b_price, b.amount AS b_amount, b.coupon AS b_coupon, b.product AS b_product, b.channel AS b_channel, b.gmt_create AS b_gmt_create, b.gmt_modify AS b_gmt_modify, b.ip AS b_ip, b.remark AS b_remark";
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String TABLE_NAME = "boo";
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String TABLE_ALIAS = "b";
 
     /**
-     *
      * column: novel_admin.boo.id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_ID = "id";
 
     /**
      * Database Column Remarks:
-     *   用户编号
+     * 用户编号
      *
      * column: novel_admin.boo.user_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_USER_ID = "user_id";
 
     /**
      * Database Column Remarks:
-     *   漫画编号
+     * 漫画编号
      *
      * column: novel_admin.boo.comic_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_COMIC_ID = "comic_id";
 
     /**
      * Database Column Remarks:
-     *   话编号
+     * 话编号
      *
      * column: novel_admin.boo.issue_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_ISSUE_ID = "issue_id";
 
     /**
      * Database Column Remarks:
-     *   价格
+     * 价格
      *
      * column: novel_admin.boo.price
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_PRICE = "price";
 
     /**
      * Database Column Remarks:
-     *   实际付费金额
+     * 实际付费金额
      *
      * column: novel_admin.boo.amount
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_AMOUNT = "amount";
 
     /**
      * Database Column Remarks:
-     *   书券金额
+     * 书券金额
      *
      * column: novel_admin.boo.coupon
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_COUPON = "coupon";
 
     /**
      * Database Column Remarks:
-     *   产品编号
+     * 产品编号
      *
      * column: novel_admin.boo.product
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_PRODUCT = "product";
 
     /**
      * Database Column Remarks:
-     *   渠道号
+     * 渠道号
      *
      * column: novel_admin.boo.channel
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_CHANNEL = "channel";
 
     /**
      * Database Column Remarks:
-     *   创建时间
+     * 创建时间
      *
      * column: novel_admin.boo.gmt_create
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_GMT_CREATE = "gmt_create";
 
     /**
      * Database Column Remarks:
-     *   更新时间
+     * 更新时间
      *
      * column: novel_admin.boo.gmt_modify
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_GMT_MODIFY = "gmt_modify";
 
     /**
      * Database Column Remarks:
-     *   IP地址(ATON后)
+     * IP地址(ATON后)
      *
      * column: novel_admin.boo.ip
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public static final String COLUMN_IP = "ip";
 
     /**
+     * Database Column Remarks:
+     * 备注
      *
+     * column: novel_admin.boo.remark
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
+    public static final String COLUMN_REMARK = "remark";
+
+    /**
      * column: novel_admin.boo.id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.id")
     private Long id;
 
     /**
      * Database Column Remarks:
-     *   用户编号
+     * 用户编号
      *
      * column: novel_admin.boo.user_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.user_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.user_id")
     private Long userId;
 
     /**
      * Database Column Remarks:
-     *   漫画编号
+     * 漫画编号
      *
      * column: novel_admin.boo.comic_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.comic_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.comic_id")
     private Long comicId;
 
     /**
      * Database Column Remarks:
-     *   话编号
+     * 话编号
      *
      * column: novel_admin.boo.issue_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.issue_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.issue_id")
     private Long issueId;
 
     /**
      * Database Column Remarks:
-     *   价格
+     * 价格
      *
      * column: novel_admin.boo.price
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.price")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.price")
     private Integer price;
 
     /**
      * Database Column Remarks:
-     *   实际付费金额
+     * 实际付费金额
      *
      * column: novel_admin.boo.amount
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.amount")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.amount")
     private Integer amount;
 
     /**
      * Database Column Remarks:
-     *   书券金额
+     * 书券金额
      *
      * column: novel_admin.boo.coupon
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.coupon")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.coupon")
     private Integer coupon;
 
     /**
      * Database Column Remarks:
-     *   产品编号
+     * 产品编号
      *
      * column: novel_admin.boo.product
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.product")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.product")
     private Long product;
 
     /**
      * Database Column Remarks:
-     *   渠道号
+     * 渠道号
      *
      * column: novel_admin.boo.channel
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.channel")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.channel")
     private Long channel;
 
     /**
      * Database Column Remarks:
-     *   创建时间
+     * 创建时间
      *
      * column: novel_admin.boo.gmt_create
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.gmt_create")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.gmt_create")
     private Date gmtCreate;
 
     /**
      * Database Column Remarks:
-     *   更新时间
+     * 更新时间
      *
      * column: novel_admin.boo.gmt_modify
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.gmt_modify")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.gmt_modify")
     private Date gmtModify;
 
     /**
      * Database Column Remarks:
-     *   IP地址(ATON后)
+     * IP地址(ATON后)
      *
      * column: novel_admin.boo.ip
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.ip")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.ip")
     private byte[] ip;
+
+    /**
+     * Database Column Remarks:
+     * 备注
+     *
+     * column: novel_admin.boo.remark
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.remark")
+    private String remark;
 
     /**
      * column: novel_admin.boo.id
      *
      * @return the value of novel_admin.boo.id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.id")
     public Long getId() {
         return id;
     }
@@ -254,7 +271,7 @@ public class Boo {
      *
      * @param id the value for novel_admin.boo.id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.id")
     public void setId(Long id) {
         this.id = id;
     }
@@ -264,7 +281,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.user_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.user_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.user_id")
     public Long getUserId() {
         return userId;
     }
@@ -274,7 +291,7 @@ public class Boo {
      *
      * @param userId the value for novel_admin.boo.user_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.user_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.user_id")
     public void setUserId(Long userId) {
         this.userId = userId;
     }
@@ -284,7 +301,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.comic_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.comic_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.comic_id")
     public Long getComicId() {
         return comicId;
     }
@@ -294,7 +311,7 @@ public class Boo {
      *
      * @param comicId the value for novel_admin.boo.comic_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.comic_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.comic_id")
     public void setComicId(Long comicId) {
         this.comicId = comicId;
     }
@@ -304,7 +321,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.issue_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.issue_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.issue_id")
     public Long getIssueId() {
         return issueId;
     }
@@ -314,7 +331,7 @@ public class Boo {
      *
      * @param issueId the value for novel_admin.boo.issue_id
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.issue_id")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.issue_id")
     public void setIssueId(Long issueId) {
         this.issueId = issueId;
     }
@@ -324,7 +341,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.price
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.price")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.price")
     public Integer getPrice() {
         return price;
     }
@@ -334,7 +351,7 @@ public class Boo {
      *
      * @param price the value for novel_admin.boo.price
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.price")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.price")
     public void setPrice(Integer price) {
         this.price = price;
     }
@@ -344,7 +361,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.amount
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.amount")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.amount")
     public Integer getAmount() {
         return amount;
     }
@@ -354,7 +371,7 @@ public class Boo {
      *
      * @param amount the value for novel_admin.boo.amount
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.amount")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.amount")
     public void setAmount(Integer amount) {
         this.amount = amount;
     }
@@ -364,7 +381,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.coupon
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.coupon")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.coupon")
     public Integer getCoupon() {
         return coupon;
     }
@@ -374,7 +391,7 @@ public class Boo {
      *
      * @param coupon the value for novel_admin.boo.coupon
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.coupon")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.coupon")
     public void setCoupon(Integer coupon) {
         this.coupon = coupon;
     }
@@ -384,7 +401,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.product
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.product")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.product")
     public Long getProduct() {
         return product;
     }
@@ -394,7 +411,7 @@ public class Boo {
      *
      * @param product the value for novel_admin.boo.product
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.product")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.product")
     public void setProduct(Long product) {
         this.product = product;
     }
@@ -404,7 +421,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.channel
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.channel")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.channel")
     public Long getChannel() {
         return channel;
     }
@@ -414,7 +431,7 @@ public class Boo {
      *
      * @param channel the value for novel_admin.boo.channel
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.channel")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.channel")
     public void setChannel(Long channel) {
         this.channel = channel;
     }
@@ -424,7 +441,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.gmt_create
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.gmt_create")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.gmt_create")
     public Date getGmtCreate() {
         return gmtCreate;
     }
@@ -434,7 +451,7 @@ public class Boo {
      *
      * @param gmtCreate the value for novel_admin.boo.gmt_create
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.gmt_create")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.gmt_create")
     public void setGmtCreate(Date gmtCreate) {
         this.gmtCreate = gmtCreate;
     }
@@ -444,7 +461,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.gmt_modify
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.gmt_modify")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.gmt_modify")
     public Date getGmtModify() {
         return gmtModify;
     }
@@ -454,7 +471,7 @@ public class Boo {
      *
      * @param gmtModify the value for novel_admin.boo.gmt_modify
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.gmt_modify")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.gmt_modify")
     public void setGmtModify(Date gmtModify) {
         this.gmtModify = gmtModify;
     }
@@ -464,7 +481,7 @@ public class Boo {
      *
      * @return the value of novel_admin.boo.ip
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.ip")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.ip")
     public byte[] getIp() {
         return ip;
     }
@@ -474,25 +491,45 @@ public class Boo {
      *
      * @param ip the value for novel_admin.boo.ip
      */
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source field: novel_admin.boo.ip")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.ip")
     public void setIp(byte[] ip) {
         this.ip = ip;
     }
 
+    /**
+     * column: novel_admin.boo.remark
+     *
+     * @return the value of novel_admin.boo.remark
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.remark")
+    public String getRemark() {
+        return remark;
+    }
+
+    /**
+     * column: novel_admin.boo.remark
+     *
+     * @param remark the value for novel_admin.boo.remark
+     */
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source field: novel_admin.boo.remark")
+    public void setRemark(String remark) {
+        this.remark = remark == null ? null : remark.trim();
+    }
+
     @Override
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.boo")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.boo")
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
     }
 
     @Override
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.boo")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.boo")
     public boolean equals(Object obj) {
         return EqualsBuilder.reflectionEquals(this, obj, false);
     }
 
     @Override
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.boo")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.boo")
     public int hashCode() {
         return HashCodeBuilder.reflectionHashCode(this, false);
     }

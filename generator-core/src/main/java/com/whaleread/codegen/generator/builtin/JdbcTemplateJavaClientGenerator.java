@@ -111,7 +111,11 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             addInsertSelectiveMethod(topLevelClass);
         }
 
-        if (tableConfig.isEnableUpdateByPrimaryKey()) {
+//        if (tableConfig.isEnableUpdateByPrimaryKey()) {
+//            addUpdateByPrimaryKeyMethod(topLevelClass);
+//        }
+
+        if (tableConfig.isEnableUpdateByPrimaryKeySelective()) {
             addUpdateByPrimaryKeySelectiveMethod(topLevelClass);
         }
 
@@ -299,7 +303,7 @@ public class JdbcTemplateJavaClientGenerator extends AbstractJavaGenerator {
             whereFragment.append(column.getColumnName()).append(" = :").append(column.getJavaProperty()).append(" AND ");
         }
         whereFragment.setLength(whereFragment.length() - 4);
-        for (IntrospectedColumn column : introspectedTable.getBaseColumns()) {
+        for (IntrospectedColumn column : introspectedTable.getAllColumns()) {
             String getterMethodName = getGetterMethodName(column.getJavaProperty(), column.getFullyQualifiedJavaType());
             method.addBodyLine("if (record." + getterMethodName + "() != null) {");
             method.addBodyLine("fragment.append(\"" + column.getColumnName() + " = :" + column.getJavaProperty() + ", \");");

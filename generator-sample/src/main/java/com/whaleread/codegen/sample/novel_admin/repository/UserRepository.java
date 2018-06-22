@@ -19,47 +19,48 @@ import org.springframework.stereotype.Repository;
 /**
  * table: novel_admin.user
  */
-@Generated(value="com.whaleread.codegen.api.WhaleGenerator", comments="Source Table: novel_admin.user")
+@Generated(value = "com.whaleread.codegen.api.WhaleGenerator", comments = "Source Table: novel_admin.user")
 @Repository
 public class UserRepository extends NamedParameterJdbcDaoSupport {
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     private AliasBeanPropertyRowMapper<User> rowMapper = new AliasBeanPropertyRowMapper<>(User.TABLE_ALIAS, User.class);
 
     @Autowired
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void inject(DataSource dataSource) {
         super.setDataSource(dataSource);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public Optional<User> selectByPrimaryKey(Long id) {
-        return getJdbcTemplate().query("SELECT " + User.BASE_COLUMNS + " FROM " + User.TABLE_NAME + " WHERE id = ? ", new Object[]{id}, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
+        return getJdbcTemplate().query("SELECT " + User.BASE_COLUMNS + " FROM " + User.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0)) : Optional.empty());
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public <T extends User> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType) {
-        return getJdbcTemplate().query("SELECT " + User.BASE_COLUMNS + " FROM " + User.TABLE_NAME + " WHERE id = ? ", new Object[]{id}, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
+        return getJdbcTemplate().query("SELECT " + User.BASE_COLUMNS + " FROM " + User.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int countByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().queryForObject("SELECT COUNT(0) FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause(), params, int.class);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public List<User> selectByCriteria(Criteria criteria, int offset, int count) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + User.ALIASED_BASE_COLUMNS + " FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, rowMapper);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public <T extends User> List<T> selectByCriteria(Criteria criteria, int offset, int count, Class<T> expectedType) {
         Map<String, Object> params = criteria.toSql();
         return getNamedParameterJdbcTemplate().query("SELECT " + User.ALIASED_BASE_COLUMNS + " FROM " + User.TABLE_NAME + " u " + criteria.getWhereClause() + criteria.getOrderByClause() + " LIMIT " + offset + ',' + count, params, (rs, rowNum) -> rowMapper.mapRow(rs, rowNum, expectedType));
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void insert(User record) {
         Map<String, Object> params = new HashMap<>();
         params.put("username", record.getUsername());
@@ -76,7 +77,7 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
         record.setId(keyHolder.getKey().longValue());
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void insertSelective(User record) {
         Map<String, Object> params = new HashMap<>();
         StringBuilder columnsFragment = new StringBuilder();
@@ -145,11 +146,15 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
         record.setId(keyHolder.getKey().longValue());
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void updateByPrimaryKeySelective(User record) {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("id", record.getId());
+        if (record.getId() != null) {
+            fragment.append("id = :id, ");
+            params.put("id", record.getId());
+        }
         if (record.getUsername() != null) {
             fragment.append("username = :username, ");
             params.put("username", record.getUsername());
@@ -201,12 +206,12 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
         getNamedParameterJdbcTemplate().update("UPDATE " + User.TABLE_NAME + " SET " + fragment + " WHERE id = :id ", params);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public int deleteByPrimaryKey(Long id) {
         return getJdbcTemplate().update("DELETE FROM " + User.TABLE_NAME + " WHERE id = ? ", id);
     }
 
-    @Generated(value="com.whaleread.codegen.api.WhaleGenerator")
+    @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
     public void deleteByCriteria(Criteria criteria) {
         Map<String, Object> params = criteria.toSql();
         getNamedParameterJdbcTemplate().update("DELETE FROM " + User.TABLE_NAME + ' ' + criteria.getWhereClause(), params);

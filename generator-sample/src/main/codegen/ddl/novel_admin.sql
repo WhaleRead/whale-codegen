@@ -77,6 +77,7 @@ CREATE TABLE `boo` (
   `product` bigint(20) NOT NULL DEFAULT '0' COMMENT '产品编号',
   `channel` bigint(20) NOT NULL DEFAULT '0' COMMENT '渠道号',
   `ip` varbinary(16) NOT NULL DEFAULT '' COMMENT 'IP地址(ATON后)',
+  `remark` text COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '备注',
   `gmt_create` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `gmt_modify` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
