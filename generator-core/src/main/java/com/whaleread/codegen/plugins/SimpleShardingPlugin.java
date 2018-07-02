@@ -74,6 +74,11 @@ public class SimpleShardingPlugin extends PluginAdapter {
     }
 
     @Override
+    public boolean clientSelectByPrimaryKeySubclassMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return processClient(method, topLevelClass, introspectedTable);
+    }
+
+    @Override
     public boolean clientUpdateByPrimaryKeySelectiveMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return processClient(method, topLevelClass, introspectedTable);
     }
