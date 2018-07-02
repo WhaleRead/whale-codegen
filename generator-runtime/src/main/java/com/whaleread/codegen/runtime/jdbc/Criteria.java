@@ -455,6 +455,9 @@ public class Criteria {
      * @param params The output of the parameter and value entries
      */
     private void toSql(StringBuilder sb, Map<String, Object> params) {
+        if(this.params != null) {
+            params.putAll(this.params);
+        }
         boolean first = true;
         String logic = or ? " OR " : " AND ";
         for (Criterion criteria : criterionList) {
