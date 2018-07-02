@@ -115,10 +115,6 @@ public class BooRepository extends NamedParameterJdbcDaoSupport {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("id", record.getId());
-        if (record.getId() != null) {
-            fragment.append("id = :id, ");
-            params.put("id", record.getId());
-        }
         if (record.getUserId() != null) {
             fragment.append("user_id = :userId, ");
             params.put("userId", record.getUserId());

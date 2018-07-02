@@ -151,10 +151,6 @@ public class UserRepository extends NamedParameterJdbcDaoSupport {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("id", record.getId());
-        if (record.getId() != null) {
-            fragment.append("id = :id, ");
-            params.put("id", record.getId());
-        }
         if (record.getUsername() != null) {
             fragment.append("username = :username, ");
             params.put("username", record.getUsername());

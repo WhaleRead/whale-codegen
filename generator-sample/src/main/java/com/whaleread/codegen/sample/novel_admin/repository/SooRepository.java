@@ -43,8 +43,8 @@ public class SooRepository extends NamedParameterJdbcDaoSupport {
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
-    public <T extends Soo> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType) {
-        return getJdbcTemplate().query("SELECT " + Soo.BASE_COLUMNS + " FROM " + Soo.TABLE_NAME + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
+    public <T extends Soo> Optional<T> selectByPrimaryKey(Long id, Class<T> expectedType, Long userId) {
+        return getJdbcTemplate().query("SELECT " + Soo.BASE_COLUMNS + " FROM " + Soo.TABLE_NAME + ShardingUtils.nodeSuffix(userId, shardingCount) + " WHERE id = ? ", new Object[] { id }, rs -> rs.next() ? Optional.of(rowMapper.mapRow(rs, 0, expectedType)) : Optional.empty());
     }
 
     @Generated(value = "com.whaleread.codegen.api.WhaleGenerator")
@@ -104,10 +104,6 @@ public class SooRepository extends NamedParameterJdbcDaoSupport {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("id", record.getId());
-        if (record.getId() != null) {
-            fragment.append("id = :id, ");
-            params.put("id", record.getId());
-        }
         if (record.getName() != null) {
             fragment.append("`name` = :name, ");
             params.put("name", record.getName());

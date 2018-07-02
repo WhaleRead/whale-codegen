@@ -133,10 +133,6 @@ public class FooRepository extends NamedParameterJdbcDaoSupport {
         StringBuilder fragment = new StringBuilder();
         Map<String, Object> params = new HashMap<>();
         params.put("id", record.getId());
-        if (record.getId() != null) {
-            fragment.append("id = :id, ");
-            params.put("id", record.getId());
-        }
         if (record.getName() != null) {
             fragment.append("`name` = :name, ");
             params.put("name", record.getName());
